@@ -42,7 +42,7 @@ public class MenuScene extends AbstractScene {
             parameter.magFilter = Texture.TextureFilter.MipMap;
             parameter.size = 48;
             font = pixturation.getAssets().get("Raleway.ttf", FreeTypeFontGenerator.class).generateFont(parameter);
-            layout = new GlyphLayout(font, "Pixturation");
+            layout = new GlyphLayout(font, pixturation.getCurrentPlayer().getName());
         }
         if (pixturation.getAssets().isLoaded("logo.png")) {
             img = pixturation.getAssets().get("logo.png");
@@ -53,7 +53,7 @@ public class MenuScene extends AbstractScene {
     public void render(float delta) {
         batch.begin();
         batch.draw(img, pixturation.viewport.getWorldWidth()/2-(layout.width+48)/2, 2*(pixturation.viewport.getWorldHeight()/3)-layout.height/2-(35));
-        font.draw(batch, "Pixturation", pixturation.viewport.getWorldWidth()/2-(layout.width-48)/2, 2*(pixturation.viewport.getWorldHeight()/3)-layout.height/2);
+        font.draw(batch, pixturation.getCurrentPlayer().getName(), pixturation.viewport.getWorldWidth()/2-(layout.width-48)/2, 2*(pixturation.viewport.getWorldHeight()/3)-layout.height/2);
         batch.end();
     }
 

@@ -41,11 +41,6 @@ public class LoadingScene extends AbstractScene {
         width = Gdx.graphics.getWidth();
     }
 
-    @Override
-    public FileHandle getTemplateFile() {
-        return Gdx.files.internal("views/empty.lml");
-    }
-
     public void create(Pixturation pixturation) {
         this.pixturation = pixturation;
     }

@@ -52,6 +52,7 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         compile "com.github.czyzby:gdx-lml:1.8.1.9.4"
+        compile "com.eclipsesource.minimal-json:minimal-json:0.9.4"
     }
 }
 

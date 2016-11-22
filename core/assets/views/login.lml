@@ -1,11 +1,15 @@
-<!--<window title="Login">
-    <textField message="E-mail" />
-    <textField message="Password" password />
-</window>-->
+<:log>Init login window</:log>
+<window title="Login">
+    <table oneColumn=true>
+        <textField onchange=updateEmail message="E-mail" />
+        <textField onchange=updatePass message="Password" passwordmode=true passwordchar="*" />
+        <button onClick=login>Login</button>
+    </table>
+</window>
 
-<:log>Init window</:log>
+<!--<:log>Init window</:log>
 <window title="My first view.">
     <:log>Write text!</:log>
         Hello world!
 </window>
-<:log>Done!</:log>
+<:log>Done!</:log>-->

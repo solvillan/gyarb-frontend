@@ -33,6 +33,8 @@ public class Pixturation extends LmlApplicationListener {
     private AssetManager assets;
     public FitViewport viewport;
     public Skin skin;
+    private String nextScreen;
+    private Player currentPlayer;
 
 
     @Override
@@ -52,6 +54,7 @@ public class Pixturation extends LmlApplicationListener {
 	private void addScreen(String name, AbstractScene scene) {
 	    screens.put(name, scene);
         scene.create(this);
+        initiateView(scene);
     }
 
     @Override
@@ -76,6 +79,10 @@ public class Pixturation extends LmlApplicationListener {
 
     @Override
 	public void render () {
+        if (nextScreen != null) {
+            setScreen(nextScreen);
+            nextScreen = null;
+        }
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         /*if (skin == null && assets.isLoaded("neon-ui.json")) {
@@ -103,10 +110,22 @@ public class Pixturation extends LmlApplicationListener {
     public void setScreen(String screen) {
         currentScreen = screens.get(screen);
         currentScreen.show();
-        setView(currentScreen);
+        setCurrentView(currentScreen);
+    }
+
+    public void shouldSetScreen(String screen) {
+        nextScreen = screen;
     }
 
     public AssetManager getAssets() {
         return assets;
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
     }
 }
