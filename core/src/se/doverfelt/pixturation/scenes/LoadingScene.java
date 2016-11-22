@@ -1,6 +1,7 @@
 package se.doverfelt.pixturation.scenes;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -15,7 +16,7 @@ import se.doverfelt.pixturation.Pixturation;
 /**
  * Created by Rickard on 2016-11-16.
  */
-public class LoadingScene extends AbstractLmlView implements Screen {
+public class LoadingScene extends AbstractScene {
     private SpriteBatch batch;
     private Texture img;
     private Pixturation pixturation;
@@ -24,9 +25,8 @@ public class LoadingScene extends AbstractLmlView implements Screen {
     private int width, height;
     private float counter = 0;
 
-    public LoadingScene(Pixturation pixturation, Stage stage) {
+    public LoadingScene(Stage stage) {
         super(stage);
-        this.pixturation = pixturation;
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Raleway.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.kerning = true;
@@ -42,6 +42,15 @@ public class LoadingScene extends AbstractLmlView implements Screen {
     }
 
     @Override
+    public FileHandle getTemplateFile() {
+        return Gdx.files.internal("views/empty.lml");
+    }
+
+    public void create(Pixturation pixturation) {
+        this.pixturation = pixturation;
+    }
+
+    @Override
     public void show() {
         batch = new SpriteBatch();
         pixturation.getAssets().finishLoadingAsset("logo.png");
@@ -50,6 +59,7 @@ public class LoadingScene extends AbstractLmlView implements Screen {
 
     @Override
     public void render(float delta) {
+        super.render();
         layout.setText(font, "Pixturation");
         batch.begin();
         batch.draw(img, pixturation.viewport.getWorldWidth()/2-(layout.width+48)/2, 2*(pixturation.viewport.getWorldHeight()/3)-layout.height/2-(35));
@@ -63,7 +73,7 @@ public class LoadingScene extends AbstractLmlView implements Screen {
     @Override
     public void update(float delta) {
         if (pixturation.getAssets().update() && counter >= 2) {
-            pixturation.setScreen("menu");
+            pixturation.setScreen("login");
         } else {
             counter += delta;
         }

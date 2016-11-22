@@ -1,0 +1,11 @@
+<!--<window title="Login">
+    <textField message="E-mail" />
+    <textField message="Password" password />
+</window>-->
+
+<:log>Init window</:log>
+<window title="My first view.">
+    <:log>Write text!</:log>
+        Hello world!
+</window>
+<:log>Done!</:log>

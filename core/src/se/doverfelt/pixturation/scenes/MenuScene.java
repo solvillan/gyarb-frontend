@@ -7,21 +7,23 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import se.doverfelt.pixturation.Pixturation;
 
 /**
  * Created by rickard on 2016-11-17.
  */
-public class MenuScene implements Screen {
+public class MenuScene extends AbstractScene {
 
     private Pixturation pixturation;
     private BitmapFont font;
     private GlyphLayout layout;
     private SpriteBatch batch;
     private Texture img;
+    private Stage newstage;
 
-    public MenuScene(Pixturation pixturation) {
-        this.pixturation = pixturation;
+    public MenuScene(Stage stage) {
+        super(stage);
     }
 
     @Override
@@ -78,5 +80,15 @@ public class MenuScene implements Screen {
     @Override
     public void dispose() {
 
+    }
+
+    @Override
+    public String getViewId() {
+        return "menu";
+    }
+
+    @Override
+    public void create(Pixturation pixturation) {
+        this.pixturation = pixturation;
     }
 }
