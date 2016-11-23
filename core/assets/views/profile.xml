@@ -2,23 +2,29 @@
 <!DOCTYPE :noop SYSTEM "../lml.dtd">
 <:noop>
     <:log>Init menu window</:log>
-    <window>
-        <window>
+    <!--<window growx="true" growy="true">-->
+    <verticalgroup groupalign="center" align="center" debugrecursively="true">
+        <window movable="false">
             <label>$getName</label>
             <!-- More info, like statistics and such -->
         </window>
-        <window>
-            <label>Friends</label>
-            <list id="friends">
-            </list>
-        </window>
-        <window>
-            <table onecolumn="true">
-                <label>Players</label>
-                <textfield message="Search" />
-                <list id="players">
-                </list>
-            </table>
-        </window>
-    </window>
+        <horizontalgroup>
+                <window movable="false">
+                    <label>Friends</label>
+                    <list id="friends">
+                    </list>
+                </window>
+                <window movable="false">
+                    <table onecolumn="true">
+                        <label>Players</label>
+                        <textfield onchange="getPlayers" message="Search" />
+                        <scrollpane>
+                            <list id="players">
+                            </list>
+                        </scrollpane>
+                    </table>
+                </window>
+        </horizontalgroup>
+    </verticalgroup>
+    <!--</window>-->
 </:noop>
