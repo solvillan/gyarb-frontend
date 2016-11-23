@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE :noop SYSTEM "../lml.dtd">
+<:noop>
+    <:log>Init menu window</:log>
+    <window>
+        <table onecolumn="true">
+            <button onclick="continueGame">Continue Game</button>
+            <button onclick="createGame">Create new Game</button>
+            <button onclick="showProfile">Profile</button>
+            <button onclick="quit">Quit</button>
+        </table>
+    </window>
+</:noop>

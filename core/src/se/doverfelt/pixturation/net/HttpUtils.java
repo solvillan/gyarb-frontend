@@ -36,6 +36,10 @@ public class HttpUtils {
         Gdx.app.log("Token", token);
     }
 
+    public static String getToken() {
+        return token;
+    }
+
     public static void post(String path, HashMap<String, String> data, Net.HttpResponseListener listener) {
         HashMap<String, String> headers = new HashMap<String, String>();
         if (token != null) {
@@ -45,19 +49,10 @@ public class HttpUtils {
     }
 
     public static void post(String path, HashMap<String, String> data, Net.HttpResponseListener listener, HashMap<String, String> headers) {
-        //Gdx.app.log("POST", "Token = " + headers.get("Token"));
         HttpRequestBuilder request = builder.newRequest().method(Net.HttpMethods.POST).url(BASE_URL + path);
         for (String k : headers.keySet()) {
             request = request.header(k, headers.get(k));
         }
-//        String content = "";
-//        for (String k : data.keySet()) {
-//            if (content.equals("")) {
-//                content += k + "=" + data.get(k);
-//            } else {
-//                content += "&" + k + "=" + data.get(k);
-//            }
-//        }
         request.formEncodedContent(data);
         Gdx.net.sendHttpRequest(request.build(), listener);
     }

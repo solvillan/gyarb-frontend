@@ -20,6 +20,16 @@ public abstract class AbstractScene extends AbstractLmlView implements Screen {
     public abstract void create(Pixturation pixturation);
 
     @Override
+    public void show() {
+        Gdx.input.setInputProcessor(getStage());
+    }
+
+    @Override
+    public void hide() {
+        getStage().dispose();
+    }
+
+    @Override
     public FileHandle getTemplateFile() {
         return Gdx.files.internal("views/empty.lml");
     }

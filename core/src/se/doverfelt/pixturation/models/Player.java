@@ -1,4 +1,4 @@
-package se.doverfelt.pixturation.scenes;
+package se.doverfelt.pixturation.models;
 
 /**
  * Created by Rickard on 2016-11-22.
@@ -15,5 +15,9 @@ public class Player {
 
     public String getName() {
         return name;
+    }
+
+    public String getEmail() {
+        return email;
     }
 }

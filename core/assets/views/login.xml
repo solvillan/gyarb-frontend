@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE :noop SYSTEM "../lml.dtd">
+<:noop>
+    <:log>Init login window</:log>
+    <window>
+        <table onecolumn="true">
+            <label>Login</label>
+            <textfield onchange="updateEmail" message="E-mail" />
+            <textfield onchange="updatePass" message="Password" passwordmode="true" passwordchar="*" />
+            <button onclick="login">Login</button>
+        </table>
+    </window>
+</:noop>
+
+<!--<:log>Init window</:log>
+<window title="My first view.">
+    <:log>Write text!</:log>
+        Hello world!
+</window>
+<:log>Done!</:log>-->

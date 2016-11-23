@@ -47,6 +47,7 @@ public class LoadingScene extends AbstractScene {
 
     @Override
     public void show() {
+        super.show();
         batch = new SpriteBatch();
         pixturation.getAssets().finishLoadingAsset("logo.png");
         img = pixturation.getAssets().get("logo.png");
@@ -92,7 +93,7 @@ public class LoadingScene extends AbstractScene {
 
     @Override
     public void hide() {
-
+        getStage().dispose();
     }
 
     @Override

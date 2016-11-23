@@ -2,12 +2,16 @@ package se.doverfelt.pixturation.scenes;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.github.czyzby.lml.annotation.LmlAction;
 import se.doverfelt.pixturation.Pixturation;
 
 /**
@@ -33,6 +37,7 @@ public class MenuScene extends AbstractScene {
 
     @Override
     public void show() {
+        super.show();
         batch = new SpriteBatch();
         if (pixturation.getAssets().isLoaded("Raleway.ttf")) {
             FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -50,11 +55,32 @@ public class MenuScene extends AbstractScene {
     }
 
     @Override
+    public FileHandle getTemplateFile() {
+        return Gdx.files.internal("views/menu.xml");
+    }
+
+    @LmlAction({"continueGame", "createGame", "showProfile"})
+    public void tmp(Actor actor) {
+        Gdx.app.log("Menu", "Button pressed!");
+    }
+
+    @LmlAction("showProfile")
+    public void showProfile(Button button) {
+        pixturation.shouldSetScreen("profile");
+    }
+
+    @LmlAction("quit")
+    public void quit(Actor actor) {
+        System.exit(0);
+    }
+
+    @Override
     public void render(float delta) {
         batch.begin();
         batch.draw(img, pixturation.viewport.getWorldWidth()/2-(layout.width+48)/2, 2*(pixturation.viewport.getWorldHeight()/3)-layout.height/2-(35));
         font.draw(batch, pixturation.getCurrentPlayer().getName(), pixturation.viewport.getWorldWidth()/2-(layout.width-48)/2, 2*(pixturation.viewport.getWorldHeight()/3)-layout.height/2);
         batch.end();
+        super.render(delta);
     }
 
     @Override
@@ -69,11 +95,6 @@ public class MenuScene extends AbstractScene {
 
     @Override
     public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
 
     }
 

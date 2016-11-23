@@ -4,10 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.net.HttpStatus;
 import com.eclipsesource.json.Json;
-import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import se.doverfelt.pixturation.Pixturation;
-import se.doverfelt.pixturation.scenes.Player;
+import se.doverfelt.pixturation.models.Player;
 
 import java.util.HashMap;
 
@@ -37,7 +36,7 @@ public class LoginHandler implements Net.HttpResponseListener {
                 public void handleHttpResponse(Net.HttpResponse httpResponse) {
                     String response = httpResponse.getResultAsString();
                     Gdx.app.log("Check", httpResponse.getStatus().getStatusCode() +  ": " + response);
-                    if (httpResponse.getStatus().getStatusCode() == 200) {
+                    if (httpResponse.getStatus().getStatusCode() == HttpStatus.SC_OK) {
                         JsonValue data = Json.parse(response);
                         if (data.isObject()) {
                             pixturation.setCurrentPlayer(new Player(data.asObject().getString("name", "NO_NAME"), data.asObject().getString("email", "NO_EMAIL")));

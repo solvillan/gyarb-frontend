@@ -57,17 +57,12 @@ public class LoginScene extends AbstractScene {
 
     @Override
     public FileHandle getTemplateFile() {
-        return Gdx.files.internal("views/login.lml");
+        return Gdx.files.internal("views/login.xml");
     }
 
     @Override
     public String getViewId() {
         return "login";
-    }
-
-    @Override
-    public void show() {
-        Gdx.input.setInputProcessor(getStage());
     }
 
     @Override
@@ -80,4 +75,8 @@ public class LoginScene extends AbstractScene {
         super.render(delta);
     }
 
+    @Override
+    public void hide() {
+        getStage().dispose();
+    }
 }
