@@ -77,8 +77,8 @@ public class MenuScene extends AbstractScene {
     @Override
     public void render(float delta) {
         batch.begin();
-        batch.draw(img, pixturation.viewport.getWorldWidth()/2-(layout.width+48)/2, 2*(pixturation.viewport.getWorldHeight()/3)-layout.height/2-(35));
-        font.draw(batch, pixturation.getCurrentPlayer().getName(), pixturation.viewport.getWorldWidth()/2-(layout.width-48)/2, 2*(pixturation.viewport.getWorldHeight()/3)-layout.height/2);
+        batch.draw(img, pixturation.viewport.getWorldWidth()/2-(layout.width+48)/2, 3*(pixturation.viewport.getWorldHeight()/4)-layout.height/2-(35));
+        font.draw(batch, pixturation.getCurrentPlayer().getName(), pixturation.viewport.getWorldWidth()/2-(layout.width-48)/2, 3*(pixturation.viewport.getWorldHeight()/4)-layout.height/2);
         batch.end();
         super.render(delta);
     }

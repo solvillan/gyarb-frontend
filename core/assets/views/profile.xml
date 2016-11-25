@@ -2,8 +2,8 @@
 <!DOCTYPE :noop SYSTEM "../lml.dtd">
 <:noop>
     <:log>Init menu window</:log>
-    <!--<window growx="true" growy="true">-->
-    <verticalgroup groupalign="center" align="center" debugrecursively="true">
+    <window growx="true" growy="true" id="profileRoot" movable="false">
+    <verticalgroup groupalign="center" align="center">
         <window movable="false">
             <label>$getName</label>
             <!-- More info, like statistics and such -->
@@ -26,5 +26,5 @@
                 </window>
         </horizontalgroup>
     </verticalgroup>
-    <!--</window>-->
+    </window>
 </:noop>

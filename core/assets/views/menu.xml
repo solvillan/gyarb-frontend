@@ -2,7 +2,7 @@
 <!DOCTYPE :noop SYSTEM "../lml.dtd">
 <:noop>
     <:log>Init menu window</:log>
-    <window>
+    <window movable="false">
         <table onecolumn="true">
             <button onclick="continueGame">Continue Game</button>
             <button onclick="createGame">Create new Game</button>

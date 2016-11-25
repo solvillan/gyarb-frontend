@@ -5,6 +5,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
@@ -31,6 +32,7 @@ public class Pixturation extends LmlApplicationListener {
     public Skin skin;
     private String nextScreen;
     private Player currentPlayer;
+    private OrthographicCamera camera;
 
 
     @Override
@@ -38,7 +40,9 @@ public class Pixturation extends LmlApplicationListener {
 		initAssets();
         super.create();
 
-        viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
+
 
         addScreen("loading", new LoadingScene(new Stage(viewport)));
         addScreen("menu", new MenuScene(new Stage(viewport)));

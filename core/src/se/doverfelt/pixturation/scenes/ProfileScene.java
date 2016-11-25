@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.Array;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonArray;
@@ -37,6 +38,12 @@ public class ProfileScene extends AbstractScene {
 
     @LmlActor("players")
     private List<Label> playerList;
+
+    @LmlActor("profileRoot")
+    private Window window;
+
+    private ColorGrid grid;
+    private boolean added;
 
     /**
      * @param stage will be filled with actors when the view is passed to a LML parser. Should not be null.
@@ -105,15 +112,20 @@ public class ProfileScene extends AbstractScene {
                         Array<String> players = new Array<String>();
                         int counter = 0;
                         java.util.List<JsonValue> values = data.asArray().values();
-                        for (int i = 0; i < values.size(); i++) {
-                            players.add(values.get(i).asObject().getString("name", "NO_NAME"));
-                            Gdx.app.log("GetPlayers", values.get(i).asObject().getString("name", "NO_NAME") + " | Count: " + counter);
+                        for (JsonValue value : values) {
+                            players.add(value.asObject().getString("name", "NO_NAME"));
+                            Gdx.app.log("GetPlayers", value.asObject().getString("name", "NO_NAME"));
                         }
+                        playerList.clearItems();
                         playerList.setItems(players);
                         Gdx.app.log("GetPlayers", playerList.getItems().toString());
                         playerList.pack();
                         playerList.layout();
+                        window.pack();
+                        window.layout();
                     }
+                } else if (httpResponse.getStatus().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
+                    playerList.clearItems();
                 }
             }
 
@@ -141,6 +153,12 @@ public class ProfileScene extends AbstractScene {
 
     @Override
     public void update(float delta) {
-
+        if (window != null && !added) {
+            grid = new ColorGrid(true, null);
+            window.add(grid);
+            window.pack();
+            window.layout();
+            added = true;
+        }
     }
 }
