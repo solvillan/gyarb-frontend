@@ -7,6 +7,7 @@ import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonValue;
 import se.doverfelt.pixturation.Pixturation;
 import se.doverfelt.pixturation.models.Player;
+import se.doverfelt.pixturation.scenes.LoginScene;
 
 import java.util.HashMap;
 
@@ -55,7 +56,13 @@ public class LoginHandler implements Net.HttpResponseListener {
                     Gdx.app.error("Check", "Request cancelled!");
                 }
             });
+        } else {
+            ( (LoginScene) pixturation.getScreen("login")).error();
         }
+    }
+
+    public boolean checkOldToken() {
+        return true; //TODO: Actually check old token
     }
 
     @Override

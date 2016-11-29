@@ -144,4 +144,8 @@ public class Pixturation extends LmlApplicationListener {
     public void setCurrentPlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
     }
+
+    public AbstractScene getScreen(String scene) {
+        return screens.get(scene);
+    }
 }

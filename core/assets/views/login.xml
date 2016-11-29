@@ -2,7 +2,7 @@
 <!DOCTYPE :noop SYSTEM "../lml.dtd">
 <:noop>
     <:log>Init login window</:log>
-    <window>
+    <window id="loginWindow">
         <table onecolumn="true">
             <label>Login</label>
             <textfield onchange="updateEmail" message="E-mail" />

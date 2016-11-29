@@ -3,11 +3,14 @@ package se.doverfelt.pixturation.scenes;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.github.czyzby.lml.annotation.LmlAction;
+import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.impl.AbstractLmlView;
 import se.doverfelt.pixturation.Pixturation;
 import se.doverfelt.pixturation.net.HttpUtils;
@@ -22,6 +25,9 @@ public class LoginScene extends AbstractScene {
 
     private String email = "", pass = "";
     private Pixturation pixturation;
+
+    @LmlActor("loginWindow")
+    private Window window;
 
     /**
      * @param stage will be filled with actors when the view is passed to a LML parser. Should not be null.
@@ -78,5 +84,9 @@ public class LoginScene extends AbstractScene {
     @Override
     public void hide() {
         getStage().dispose();
+    }
+
+    public void error() {
+        //TODO: Do error view!
     }
 }
