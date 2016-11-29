@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.net.HttpStatus;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
@@ -12,19 +11,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.Array;
 import com.eclipsesource.json.Json;
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
-import com.github.czyzby.lml.parser.LmlParser;
-import com.github.czyzby.lml.util.LmlParserBuilder;
-import com.github.czyzby.lml.util.LmlUtilities;
 import se.doverfelt.pixturation.Pixturation;
-import se.doverfelt.pixturation.models.Player;
 import se.doverfelt.pixturation.net.HttpUtils;
-
-import java.util.Arrays;
+import se.doverfelt.pixturation.scenes.components.ColorGrid;
 
 /**
  * Created by rickard on 2016-11-23.

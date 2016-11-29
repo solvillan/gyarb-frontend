@@ -1,4 +1,4 @@
-package se.doverfelt.pixturation.scenes;
+package se.doverfelt.pixturation.scenes.components;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
