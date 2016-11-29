@@ -57,7 +57,10 @@ public class LoginHandler implements Net.HttpResponseListener {
                 }
             });
         } else {
-            ( (LoginScene) pixturation.getScreen("login")).error();
+            JsonValue data = Json.parse(response);
+            if (data.isObject()) {
+                ((LoginScene) pixturation.getScreen("login")).error(data.asObject().getString("error", "Error logging in!"));
+            }
         }
     }
 

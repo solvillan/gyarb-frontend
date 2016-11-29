@@ -1,14 +1,14 @@
 package se.doverfelt.pixturation.scenes;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.utils.Align;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.impl.AbstractLmlView;
@@ -28,6 +28,12 @@ public class LoginScene extends AbstractScene {
 
     @LmlActor("loginWindow")
     private Window window;
+
+    @LmlActor("errorDialog")
+    private Dialog errorDialog;
+
+    @LmlActor("errorMessage")
+    private Label errorMsg;
 
     /**
      * @param stage will be filled with actors when the view is passed to a LML parser. Should not be null.
@@ -73,7 +79,6 @@ public class LoginScene extends AbstractScene {
 
     @Override
     public void update(float delta) {
-
     }
 
     @Override
@@ -86,7 +91,20 @@ public class LoginScene extends AbstractScene {
         getStage().dispose();
     }
 
-    public void error() {
+    public void error(String msg) {
         //TODO: Do error view!
+        errorMsg.setText(msg);
+        errorDialog.setVisible(true);
+        errorDialog.setZIndex(500);
+        errorDialog.pack();
+        errorDialog.setPosition((getStage().getWidth() / 2f) - (errorDialog.getWidth() / 2f), (getStage().getHeight() / 2f) - (errorDialog.getHeight() / 2f));
+        window.setVisible(false);
+    }
+
+    @LmlAction("closeError")
+    public boolean closeError(Object object) {
+        errorDialog.setVisible(false);
+        window.setVisible(true);
+        return true;
     }
 }

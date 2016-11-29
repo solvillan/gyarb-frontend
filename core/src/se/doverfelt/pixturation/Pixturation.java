@@ -34,6 +34,11 @@ public class Pixturation extends LmlApplicationListener {
     private Player currentPlayer;
     private OrthographicCamera camera;
 
+    private float rstart = 0.45f, gstart = 0, bstart= 0;
+    private float r = 0.45f, g = 0, b= 0;
+    private float rend = 0.008f, gend = 0, bend= 0.29f;
+    private float fadetime = 10;
+    private boolean fade = true;
 
     @Override
 	public void create () {
@@ -91,13 +96,39 @@ public class Pixturation extends LmlApplicationListener {
         //assets.load("neon-ui.json", Skin.class, new SkinLoader.SkinParameter("neon-ui.atlas"));
     }
 
+    private void fadeBg() {
+        float rchange = (rend - rstart) / fadetime;
+        float bchange = (bend - bstart) / fadetime;
+        float gchange = (gend - gstart) / fadetime;
+
+
+
+        if (r > rend && fade) {
+            r += rchange * Gdx.graphics.getDeltaTime();
+            g += gchange * Gdx.graphics.getDeltaTime();
+            b += bchange * Gdx.graphics.getDeltaTime();
+        } else {
+            r -= rchange * Gdx.graphics.getDeltaTime();
+            g -= gchange * Gdx.graphics.getDeltaTime();
+            b -= bchange * Gdx.graphics.getDeltaTime();
+        }
+
+        if (r <= rend) {
+            fade = false;
+        } else if (r >= rstart) {
+            fade = true;
+        }
+
+        Gdx.gl.glClearColor(r, g, b, 1);
+    }
+
     @Override
 	public void render () {
         if (nextScreen != null) {
             setScreen(nextScreen);
             nextScreen = null;
         }
-		Gdx.gl.glClearColor(0, 0, 0, 1);
+		fadeBg();
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         /*if (skin == null && assets.isLoaded("neon-ui.json")) {
             skin = assets.get("neon-ui.json", Skin.class);

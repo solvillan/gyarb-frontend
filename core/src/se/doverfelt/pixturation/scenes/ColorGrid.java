@@ -68,6 +68,8 @@ public class ColorGrid extends Actor {
         int y = (int) Math.floor(ys / DIMENSION);
         if (x >= 32) x = 31;
         if (y >= 32) y = 31;
+        if (x < 0) x = 0;
+        if (y < 0) y = 0;
         this.tiles[x][y] = color;
     }
 

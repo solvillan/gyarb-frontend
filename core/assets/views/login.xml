@@ -10,6 +10,10 @@
             <button onclick="login">Login</button>
         </table>
     </window>
+    <dialog visible="false" id="errorDialog" alpha="1">
+        <label id="errorMessage"/>
+        <textbutton onresult="closeError" growx="true">Ok</textbutton>
+    </dialog>
 </:noop>
 
 <!--<:log>Init window</:log>
