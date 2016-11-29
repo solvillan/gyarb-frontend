@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 
 /**
  * Created by rickard on 2016-11-24.
@@ -22,12 +23,9 @@ public class ColorGrid extends Actor {
     private boolean editable;
     private ShapeRenderer shapes;
     private final float DIMENSION;
-    private Texture img;
 
     public ColorGrid(final boolean editable, Color[][] tiles) {
         super();
-        img = new Texture("logo.png");
-        setBounds(0, 0, img.getWidth(), img.getHeight());
         DIMENSION = (Gdx.graphics.getHeight() - 32) / 32;
         this.editable = editable;
         if (tiles != null) {
@@ -55,10 +53,12 @@ public class ColorGrid extends Actor {
         super.act(delta);
         if (editable) {
             Vector2 mousePos = screenToLocalCoordinates(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
-            if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-                changeTile(mousePos.x, mousePos.y, new Color(MathUtils.random(), MathUtils.random(), MathUtils.random(), 1));
-            } else if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
-                changeTile(mousePos.x, mousePos.y, Color.WHITE);
+            if (mousePos.x > 0 && mousePos.x < getWidth() && mousePos.y > 0 && mousePos.y < getHeight()) {
+                if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+                    changeTile(mousePos.x, mousePos.y, new Color(MathUtils.random(), MathUtils.random(), MathUtils.random(), 1));
+                } else if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
+                    changeTile(mousePos.x, mousePos.y, Color.WHITE);
+                }
             }
         }
     }
