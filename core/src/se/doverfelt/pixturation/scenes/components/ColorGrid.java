@@ -3,6 +3,7 @@ package se.doverfelt.pixturation.scenes.components;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -13,6 +14,13 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonValue;
+
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * Created by rickard on 2016-11-24.
@@ -23,6 +31,7 @@ public class ColorGrid extends Actor {
     private boolean editable;
     private ShapeRenderer shapes;
     private final float DIMENSION;
+    private Color currentColor = Color.WHITE;
 
     public ColorGrid(final boolean editable, Color[][] tiles) {
         super();
@@ -55,7 +64,7 @@ public class ColorGrid extends Actor {
             Vector2 mousePos = screenToLocalCoordinates(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
             if (mousePos.x > 0 && mousePos.x < getWidth() && mousePos.y > 0 && mousePos.y < getHeight()) {
                 if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-                    changeTile(mousePos.x, mousePos.y, new Color(MathUtils.random(), MathUtils.random(), MathUtils.random(), 1));
+                    changeTile(mousePos.x, mousePos.y, currentColor);
                 } else if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
                     changeTile(mousePos.x, mousePos.y, Color.WHITE);
                 }
@@ -71,6 +80,7 @@ public class ColorGrid extends Actor {
         if (x < 0) x = 0;
         if (y < 0) y = 0;
         this.tiles[x][y] = color;
+        Gdx.app.log("ColorGrid", "Json: " + toJson());
     }
 
     @Override
@@ -105,5 +115,43 @@ public class ColorGrid extends Actor {
             }
         }
         shapes.end();
+    }
+
+    public String toJson() {
+        JsonArray array = new JsonArray();
+        for (int x = 0; x < tiles.length; x++) {
+            JsonArray yvalues = new JsonArray();
+            for (int y = 0; y < tiles[x].length; y++) {
+                yvalues.add(tiles[x][y].toString());
+            }
+            array.add(yvalues);
+        }
+        try {
+            array.writeTo(new PrintWriter(System.out));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return array.toString();
+    }
+
+    public void setCurrentColor(Color currentColor) {
+        this.currentColor = currentColor;
+    }
+
+    public static Color[][] parseJson(String json) {
+        Color[][] colors = new Color[32][32];
+        JsonValue value = Json.parse(json);
+
+        if (value.isArray()) {
+            JsonArray xvalues = value.asArray();
+            for (int x = 0; x < 32; x++) {
+                JsonArray yvalues = xvalues.get(x).asArray();
+                for (int y = 0; y < 32; y++) {
+                    colors[x][y] = Color.valueOf(yvalues.get(y).asString());
+                }
+            }
+        }
+
+        return colors;
     }
 }

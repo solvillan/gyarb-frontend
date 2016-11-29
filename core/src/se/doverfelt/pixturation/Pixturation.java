@@ -53,6 +53,7 @@ public class Pixturation extends LmlApplicationListener {
         addScreen("menu", new MenuScene(new Stage(viewport)));
         addScreen("login", new LoginScene(new Stage(viewport)));
         addScreen("profile", new ProfileScene(new Stage(viewport)));
+        addScreen("game", new GameScene(new Stage(viewport)));
 
         setScreen("loading");
 	}
