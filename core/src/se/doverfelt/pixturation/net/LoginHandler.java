@@ -17,6 +17,8 @@ import java.util.HashMap;
 public class LoginHandler implements Net.HttpResponseListener {
 
     private final Pixturation pixturation;
+    private boolean tokenValid = false;
+    private boolean tokenChecked = false;
 
     public LoginHandler(Pixturation pixturation) {
         this.pixturation = pixturation;
@@ -30,32 +32,10 @@ public class LoginHandler implements Net.HttpResponseListener {
             JsonValue data = Json.parse(response);
             if (data.isObject()) {
                 HttpUtils.setToken(data.asObject().get("token").asString());
+                pixturation.getPreferences().putString("token", data.asObject().get("token").asString());
+                pixturation.getPreferences().flush();
             }
-            HashMap<String, String> param = new HashMap<String, String>();
-            HttpUtils.post("user/check-token", param, new Net.HttpResponseListener() {
-                @Override
-                public void handleHttpResponse(Net.HttpResponse httpResponse) {
-                    String response = httpResponse.getResultAsString();
-                    Gdx.app.log("Check", httpResponse.getStatus().getStatusCode() +  ": " + response);
-                    if (httpResponse.getStatus().getStatusCode() == HttpStatus.SC_OK) {
-                        JsonValue data = Json.parse(response);
-                        if (data.isObject()) {
-                            pixturation.setCurrentPlayer(new Player(data.asObject().getString("name", "NO_NAME"), data.asObject().getString("email", "NO_EMAIL")));
-                            pixturation.shouldSetScreen("menu");
-                        }
-                    }
-                }
-
-                @Override
-                public void failed(Throwable t) {
-                    Gdx.app.error("Check", t.getMessage());
-                }
-
-                @Override
-                public void cancelled() {
-                    Gdx.app.error("Check", "Request cancelled!");
-                }
-            });
+            authToken();
         } else {
             JsonValue data = Json.parse(response);
             if (data.isObject()) {
@@ -64,8 +44,63 @@ public class LoginHandler implements Net.HttpResponseListener {
         }
     }
 
-    public boolean checkOldToken() {
-        return true; //TODO: Actually check old token
+    public void authToken() {
+        HashMap<String, String> param = new HashMap<String, String>();
+        HttpUtils.post("user/check-token", param, new Net.HttpResponseListener() {
+            @Override
+            public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                String response = httpResponse.getResultAsString();
+                Gdx.app.log("Check", httpResponse.getStatus().getStatusCode() +  ": " + response);
+                if (httpResponse.getStatus().getStatusCode() == HttpStatus.SC_OK) {
+                    JsonValue data = Json.parse(response);
+                    if (data.isObject()) {
+                        pixturation.setCurrentPlayer(new Player(data.asObject().getString("name", "NO_NAME"), data.asObject().getString("email", "NO_EMAIL")));
+                        pixturation.shouldSetScreen("menu");
+                    }
+                }
+            }
+
+            @Override
+            public void failed(Throwable t) {
+                Gdx.app.error("Check", t.getMessage());
+            }
+
+            @Override
+            public void cancelled() {
+                Gdx.app.error("Check", "Request cancelled!");
+            }
+        });
+    }
+
+    public boolean checkOldToken(String token) {
+        HashMap<String, String> param = new HashMap<String, String>();
+        HashMap<String, String> headers = new HashMap<String, String>();
+        headers.put("Token", token);
+        HttpUtils.post("user/check-token", param, new Net.HttpResponseListener() {
+            @Override
+            public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                String response = httpResponse.getResultAsString();
+                Gdx.app.log("Check", httpResponse.getStatus().getStatusCode() +  ": " + response);
+                if (httpResponse.getStatus().getStatusCode() == HttpStatus.SC_OK) {
+                    tokenValid = true;
+                }
+                tokenChecked = true;
+            }
+
+            @Override
+            public void failed(Throwable t) {
+                Gdx.app.error("Check", t.getMessage());
+            }
+
+            @Override
+            public void cancelled() {
+                Gdx.app.error("Check", "Request cancelled!");
+            }
+        }, headers);
+        while (!tokenChecked) {
+            Thread.yield();
+        }
+        return tokenValid;
     }
 
     @Override

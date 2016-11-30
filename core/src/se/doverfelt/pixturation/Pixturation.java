@@ -1,6 +1,7 @@
 package se.doverfelt.pixturation;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
@@ -40,6 +41,8 @@ public class Pixturation extends LmlApplicationListener {
     private float fadetime = 10;
     private boolean fade = true;
 
+    private Preferences preferences;
+
     @Override
 	public void create () {
 		initAssets();
@@ -48,6 +51,7 @@ public class Pixturation extends LmlApplicationListener {
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
 
+        preferences = Gdx.app.getPreferences("pixturation");
 
         addScreen("loading", new LoadingScene(new Stage(viewport)));
         addScreen("menu", new MenuScene(new Stage(viewport)));
@@ -179,5 +183,9 @@ public class Pixturation extends LmlApplicationListener {
 
     public AbstractScene getScreen(String scene) {
         return screens.get(scene);
+    }
+
+    public Preferences getPreferences() {
+        return preferences;
     }
 }

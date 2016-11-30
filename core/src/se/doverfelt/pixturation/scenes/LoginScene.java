@@ -35,6 +35,8 @@ public class LoginScene extends AbstractScene {
     @LmlActor("errorMessage")
     private Label errorMsg;
 
+    private LoginHandler handler;
+
     /**
      * @param stage will be filled with actors when the view is passed to a LML parser. Should not be null.
      */
@@ -49,7 +51,7 @@ public class LoginScene extends AbstractScene {
         HashMap<String, String> data = new HashMap<String, String>();
         data.put("email", this.email);
         data.put("password", this.pass);
-        HttpUtils.post("user/auth", data, new LoginHandler(pixturation));
+        HttpUtils.post("user/auth", data, handler);
     }
 
     @LmlAction("updateEmail")
@@ -65,6 +67,7 @@ public class LoginScene extends AbstractScene {
     @Override
     public void create(Pixturation pixturation) {
         this.pixturation = pixturation;
+        handler = new LoginHandler(pixturation);
     }
 
     @Override
@@ -79,6 +82,17 @@ public class LoginScene extends AbstractScene {
 
     @Override
     public void update(float delta) {
+    }
+
+    @Override
+    public void show() {
+        super.show();
+        if (pixturation.getPreferences().contains("token")) {
+            if (handler.checkOldToken(pixturation.getPreferences().getString("token"))) {
+                HttpUtils.setToken(pixturation.getPreferences().getString("token"));
+                handler.authToken();
+            }
+        }
     }
 
     @Override
