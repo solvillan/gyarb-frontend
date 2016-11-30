@@ -129,8 +129,9 @@ public class ColorPicker extends Actor {
         Vector2 cur = localToStageCoordinates(new Vector2(0, DIMENSION*colors[0].length));
         shapes.rect(cur.x, cur.y, getWidth(), 32);
         shapes.set(ShapeRenderer.ShapeType.Line);
-        layout.setText(font, currentColor.toString());
-        font.draw(batch, currentColor.toString(), cur.x + (getWidth() / 2f) - (layout.width / 2f), cur.y + 16 - (layout.height / 2f));
+        /*layout.setText(font, currentColor.toString());
+        batch.setColor(Color.WHITE);
+        font.draw(batch, currentColor.toString(), cur.x, cur.y);*/
         shapes.setColor(Color.LIGHT_GRAY);
         for (int x = 0; x < colors.length; x++) {
             for (int y = 0; y < colors[0].length; y++) {

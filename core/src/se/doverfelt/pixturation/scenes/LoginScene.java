@@ -106,7 +106,6 @@ public class LoginScene extends AbstractScene {
     }
 
     public void error(String msg) {
-        //TODO: Do error view!
         errorMsg.setText(msg);
         errorDialog.setVisible(true);
         errorDialog.setZIndex(500);

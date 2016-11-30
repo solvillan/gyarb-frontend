@@ -80,7 +80,6 @@ public class ColorGrid extends Actor {
         if (x < 0) x = 0;
         if (y < 0) y = 0;
         this.tiles[x][y] = color;
-        Gdx.app.log("ColorGrid", "Json: " + toJson());
     }
 
     @Override
