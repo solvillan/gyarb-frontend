@@ -76,6 +76,33 @@ public class HttpUtils {
         post(path, data, listener, headers);
     }
 
+    public static Net.HttpResponse postSync(String path, HashMap<String, String> data) {
+        final byte[] status = {0};
+        final Net.HttpResponse[] response = new Net.HttpResponse[1];
+        post(path, data, new Net.HttpResponseListener() {
+            @Override
+            public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                status[0] = 1;
+                response[0] = httpResponse;
+            }
+
+            @Override
+            public void failed(Throwable t) {
+                status[0] = -1;
+                Gdx.app.error("GetSync", t.getMessage(), t);
+            }
+
+            @Override
+            public void cancelled() {
+                status[0] = -2;
+            }
+        });
+        while (status[0] == 0) {
+            Thread.yield();
+        }
+        return response[0];
+    }
+
     public static void post(String path, HashMap<String, String> data, Net.HttpResponseListener listener, HashMap<String, String> headers) {
         HttpRequestBuilder request = builder.newRequest().method(Net.HttpMethods.POST).url(BASE_URL + path);
         for (String k : headers.keySet()) {
@@ -83,6 +110,10 @@ public class HttpUtils {
         }
         request.formEncodedContent(data);
         Gdx.net.sendHttpRequest(request.build(), listener);
+    }
+
+    public static class MalformedResponseException extends Exception {
+
     }
 
 }

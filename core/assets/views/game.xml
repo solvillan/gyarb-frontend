@@ -2,6 +2,18 @@
 <!DOCTYPE :noop SYSTEM "../lml.dtd">
 <:noop>
     <:log>Init menu window</:log>
-    <window id="gameWindow" movable="false">
-    </window>
+    <horizontalgroup growx="true" id="container">
+        <window id="controls" movable="false">
+            <verticalgroup grow="true">
+                <textarea id="messages">
+
+                </textarea>
+                <horizontalgroup growx="true">
+                    <button>Submit</button>
+                </horizontalgroup>
+            </verticalgroup>
+        </window>
+        <window id="gameWindow" movable="false">
+        </window>
+    </horizontalgroup>
 </:noop>

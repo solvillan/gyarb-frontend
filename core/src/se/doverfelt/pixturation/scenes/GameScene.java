@@ -5,6 +5,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
@@ -19,6 +20,9 @@ public class GameScene extends AbstractScene {
 
     @LmlActor("gameWindow")
     private Window window;
+
+    @LmlActor("container")
+    private HorizontalGroup container;
 
     private ColorPicker colorPicker;
     private ColorGrid grid;
@@ -63,6 +67,8 @@ public class GameScene extends AbstractScene {
             window.pack();
             window.layout();
             added = true;
+            container.pack();
+            container.layout();
         }
     }
 

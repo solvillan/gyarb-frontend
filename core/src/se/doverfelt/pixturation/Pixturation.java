@@ -18,6 +18,7 @@ import com.github.czyzby.lml.parser.LmlParser;
 import com.github.czyzby.lml.parser.impl.tag.Dtd;
 import com.github.czyzby.lml.util.Lml;
 import com.github.czyzby.lml.util.LmlApplicationListener;
+import se.doverfelt.pixturation.models.Game;
 import se.doverfelt.pixturation.models.Player;
 import se.doverfelt.pixturation.scenes.*;
 import se.doverfelt.pixturation.utils.CompressionUtils;
@@ -43,6 +44,8 @@ public class Pixturation extends LmlApplicationListener {
     private float fadetime = 10;
     private boolean fade = true;
 
+    private Game currentGame;
+
     private Preferences preferences;
 
     @Override
@@ -51,7 +54,7 @@ public class Pixturation extends LmlApplicationListener {
         super.create();
 
         try {
-            String comp = CompressionUtils.toGzBase64("The answer to life, the universe and everything");
+            String comp = CompressionUtils.toGzBase64("Hello, and please feel and please feel and please feel and please feel and please feel and please feel and please feel and please feel and please feel and please feel and please feel and please feel and please feel welcome!");
             Gdx.app.log("Compressed", comp);
             Gdx.app.log("Decompressed", CompressionUtils.fromGzBase64(comp));
         } catch (IOException e) {
@@ -168,7 +171,10 @@ public class Pixturation extends LmlApplicationListener {
 	}
 
     public void setScreen(String screen) {
-        if (currentScreen != null)currentScreen.hide();
+        if (currentScreen != null) {
+            currentScreen.hide();
+            currentScreen.clear();
+        }
         currentScreen = screens.get(screen);
         currentScreen.show();
         initiateView(currentScreen);
@@ -197,5 +203,13 @@ public class Pixturation extends LmlApplicationListener {
 
     public Preferences getPreferences() {
         return preferences;
+    }
+
+    public Game getCurrentGame() {
+        return currentGame;
+    }
+
+    public void setCurrentGame(Game currentGame) {
+        this.currentGame = currentGame;
     }
 }

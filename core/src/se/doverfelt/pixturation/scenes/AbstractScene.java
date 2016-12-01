@@ -25,11 +25,6 @@ public abstract class AbstractScene extends AbstractLmlView implements Screen {
     }
 
     @Override
-    public void hide() {
-        getStage().dispose();
-    }
-
-    @Override
     public FileHandle getTemplateFile() {
         return Gdx.files.internal("views/empty.lml");
     }

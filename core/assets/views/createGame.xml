@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE :noop SYSTEM "../lml.dtd">
+<:noop>
+    <:log>Init create game window</:log>
+    <window id="controls" movable="false">
+        <verticalgroup grow="true">
+
+            <horizontalgroup growx="true">
+                <button onclick="createGame">Create Game!</button>
+            </horizontalgroup>
+        </verticalgroup>
+    </window>
+</:noop>
