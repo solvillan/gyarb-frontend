@@ -15,7 +15,7 @@ import com.eclipsesource.json.JsonValue;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
 import se.doverfelt.pixturation.Pixturation;
-import se.doverfelt.pixturation.net.HttpUtils;
+import se.doverfelt.pixturation.utils.HttpUtils;
 import se.doverfelt.pixturation.scenes.components.ColorGrid;
 
 /**

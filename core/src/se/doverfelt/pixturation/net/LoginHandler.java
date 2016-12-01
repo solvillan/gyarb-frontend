@@ -8,6 +8,7 @@ import com.eclipsesource.json.JsonValue;
 import se.doverfelt.pixturation.Pixturation;
 import se.doverfelt.pixturation.models.Player;
 import se.doverfelt.pixturation.scenes.LoginScene;
+import se.doverfelt.pixturation.utils.HttpUtils;
 
 import java.util.HashMap;
 

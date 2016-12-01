@@ -1,19 +1,13 @@
 package se.doverfelt.pixturation.scenes;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Net;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.utils.Align;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
-import com.github.czyzby.lml.parser.impl.AbstractLmlView;
 import se.doverfelt.pixturation.Pixturation;
-import se.doverfelt.pixturation.net.HttpUtils;
+import se.doverfelt.pixturation.utils.HttpUtils;
 import se.doverfelt.pixturation.net.LoginHandler;
 
 import java.util.HashMap;

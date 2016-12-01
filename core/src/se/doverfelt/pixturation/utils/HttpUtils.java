@@ -1,7 +1,8 @@
-package se.doverfelt.pixturation.net;
+package se.doverfelt.pixturation.utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
+import com.badlogic.gdx.graphics.glutils.GLFrameBuffer;
 import com.badlogic.gdx.net.HttpRequestBuilder;
 
 import java.util.HashMap;
@@ -14,6 +15,33 @@ public class HttpUtils {
     private static HttpRequestBuilder builder = new HttpRequestBuilder();
     private static final String BASE_URL = "http://localhost/";
     private static String token;
+
+    public static Net.HttpResponse getSync(String path) {
+        final byte[] status = {0};
+        final Net.HttpResponse[] response = new Net.HttpResponse[1];
+        get(path, new Net.HttpResponseListener() {
+            @Override
+            public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                status[0] = 1;
+                response[0] = httpResponse;
+            }
+
+            @Override
+            public void failed(Throwable t) {
+                status[0] = -1;
+                Gdx.app.error("GetSync", t.getMessage(), t);
+            }
+
+            @Override
+            public void cancelled() {
+                status[0] = -2;
+            }
+        });
+        while (status[0] == 0) {
+            Thread.yield();
+        }
+        return response[0];
+    }
 
     public static void get(String path, Net.HttpResponseListener listener) {
         HashMap<String, String> headers = new HashMap<String, String>();

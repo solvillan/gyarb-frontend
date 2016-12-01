@@ -20,7 +20,9 @@ import com.github.czyzby.lml.util.Lml;
 import com.github.czyzby.lml.util.LmlApplicationListener;
 import se.doverfelt.pixturation.models.Player;
 import se.doverfelt.pixturation.scenes.*;
+import se.doverfelt.pixturation.utils.CompressionUtils;
 
+import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
 
@@ -47,6 +49,14 @@ public class Pixturation extends LmlApplicationListener {
 	public void create () {
 		initAssets();
         super.create();
+
+        try {
+            String comp = CompressionUtils.toGzBase64("The answer to life, the universe and everything");
+            Gdx.app.log("Compressed", comp);
+            Gdx.app.log("Decompressed", CompressionUtils.fromGzBase64(comp));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
