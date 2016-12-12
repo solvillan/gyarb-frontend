@@ -91,11 +91,13 @@ public class LoginHandler implements Net.HttpResponseListener {
             @Override
             public void failed(Throwable t) {
                 Gdx.app.error("Check", t.getMessage());
+                tokenChecked = true;
             }
 
             @Override
             public void cancelled() {
                 Gdx.app.error("Check", "Request cancelled!");
+                tokenChecked = true;
             }
         }, headers);
         while (!tokenChecked) {
