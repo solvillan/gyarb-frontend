@@ -61,6 +61,9 @@ public class LoadingScene extends AbstractScene {
         batch.draw(img, pixturation.viewport.getWorldWidth()/2-(layout.width+48)/2, 2*(pixturation.viewport.getWorldHeight()/3)-layout.height/2-(35));
         font.draw(batch, "Pixturation", pixturation.viewport.getWorldWidth()/2-(layout.width-48)/2, 2*(pixturation.viewport.getWorldHeight()/3)-layout.height/2);
         String p = (pixturation.getAssets().getProgress()*100) + "%";
+        if (pixturation.getAssets().getProgress() >= 1 && pixturation.getPreferences().contains("token")) {
+            p = "Checking old Token";
+        }
         layout.setText(font, p);
         font.draw(batch, p, pixturation.viewport.getWorldWidth()/2 - layout.width/2, pixturation.viewport.getWorldHeight()/3-layout.height/2);
         batch.end();
@@ -68,7 +71,7 @@ public class LoadingScene extends AbstractScene {
 
     @Override
     public void update(float delta) {
-        if (pixturation.getAssets().update() && counter >= 2) {
+        if (pixturation.getAssets().update() && counter >= 0.5) {
             pixturation.setScreen("login");
         } else {
             counter += delta;
