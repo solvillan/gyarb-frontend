@@ -1,5 +1,6 @@
 package se.doverfelt.pixturation.desktop;
 
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
@@ -22,6 +23,8 @@ public class DesktopLauncher {
 		config.height = 720;
 		config.fullscreen = false;
 		config.resizable = false;
+		//TODO Add icons in 128x 32x 16x res
+		//config.addIcon("logo32.png", Files.FileType.Internal);
 		new LwjglApplication(new Pixturation(), config);
 	}
 }

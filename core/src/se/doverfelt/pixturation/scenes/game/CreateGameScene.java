@@ -1,4 +1,4 @@
-package se.doverfelt.pixturation.scenes;
+package se.doverfelt.pixturation.scenes.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.github.czyzby.lml.annotation.LmlAction;
 import se.doverfelt.pixturation.Pixturation;
 import se.doverfelt.pixturation.models.Game;
+import se.doverfelt.pixturation.scenes.AbstractScene;
 import se.doverfelt.pixturation.utils.HttpUtils;
 
 /**

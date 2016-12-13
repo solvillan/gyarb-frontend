@@ -2,19 +2,18 @@
 <!DOCTYPE :noop SYSTEM "../lml.dtd">
 <:noop>
     <:log>Init menu window</:log>
-    <horizontalgroup growx="true" id="container" fillparent="true">
-        <window id="controls" movable="false" filly="true">
-            <verticalgroup grow="true">
-                <textarea id="messages" growy="true">
-
-                </textarea>
+    <!--<horizontalgroup growx="true" id="drawContainer" fillparent="true">-->
+        <window id="controls" align="left">
+        <horizontalgroup fillparent="true">
+            <verticalgroup>
+                <label id="word"/>
                 <horizontalgroup growx="true">
                     <button onclick="submit">Submit</button>
                     <button onclick="back">Back</button>
                 </horizontalgroup>
             </verticalgroup>
+            <horizontalgroup id="drawGameWindow" />
+        </horizontalgroup>
         </window>
-        <window id="gameWindow" movable="false">
-        </window>
-    </horizontalgroup>
+    <!--</horizontalgroup>-->
 </:noop>

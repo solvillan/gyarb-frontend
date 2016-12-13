@@ -26,6 +26,7 @@ public class ColorPicker extends Actor {
 
     private final float DIMENSION;
     private final float DIMENSION_GRID;
+    private BitmapFont font;
     private GlyphLayout layout;
     private BitmapFontCache fontCache;
     private Color currentColor = Color.WHITE;
@@ -38,16 +39,16 @@ public class ColorPicker extends Actor {
 
     public ColorPicker(Pixturation pixturation, Skin skin) {
         style = skin.get(Label.LabelStyle.class);
-        /*if (pixturation.getAssets().isLoaded("Raleway.ttf")) {
+        if (pixturation.getAssets().isLoaded("Raleway.ttf")) {
             FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
             parameter.kerning = true;
             parameter.genMipMaps = true;
             parameter.minFilter = Texture.TextureFilter.MipMap;
             parameter.magFilter = Texture.TextureFilter.MipMap;
-            parameter.size = 48;
+            parameter.size = 24;
             font = pixturation.getAssets().get("Raleway.ttf", FreeTypeFontGenerator.class).generateFont(parameter);
 
-        }*/
+        }
         layout = new GlyphLayout(style.font, "Test");
         fontCache = style.font.newFontCache();
         fontCache.setText(layout, getX(), getY());
@@ -142,15 +143,6 @@ public class ColorPicker extends Actor {
         Vector2 cur = localToStageCoordinates(new Vector2(0, DIMENSION*colors[0].length));
         shapes.rect(cur.x, cur.y, getWidth(), getHeight()/3);
 
-        layout.setText(fontCache.getFont(), currentColor.toString());
-        cur = localToStageCoordinates(new Vector2(getWidth() / 2f - layout.width/2f, DIMENSION*colors[0].length + (getHeight()/3f) + layout.height/2f));
-        this.batch.setProjectionMatrix(getStage().getCamera().combined);
-        this.batch.begin();
-        this.batch.setColor(Color.PINK);
-        style.font.draw(this.batch, currentColor.toString(), cur.x, cur.y);
-        //this.batch.draw(debug, cur.x, cur.y);
-        this.batch.end();
-
         shapes.set(ShapeRenderer.ShapeType.Line);
         shapes.setColor(Color.LIGHT_GRAY);
         for (int x = 0; x < colors.length; x++) {
@@ -160,6 +152,15 @@ public class ColorPicker extends Actor {
             }
         }
         shapes.end();
+
+        layout.setText(font, "#" + currentColor.toString());
+        cur = localToStageCoordinates(new Vector2(getWidth() / 2f - layout.width/2f, DIMENSION*colors[0].length + (getHeight()/3f) - layout.height/2f));
+        this.batch.setProjectionMatrix(getStage().getCamera().combined);
+        this.batch.begin();
+        font.setColor(1 - currentColor.r, 1 - currentColor.g, 1 - currentColor.b, 1);
+        font.draw(this.batch, "#" + currentColor.toString(), cur.x, cur.y);
+        //this.batch.draw(debug, cur.x, cur.y);
+        this.batch.end();
     }
 
     public interface ColorListener {

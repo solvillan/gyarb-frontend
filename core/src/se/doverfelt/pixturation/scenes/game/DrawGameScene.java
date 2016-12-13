@@ -1,4 +1,4 @@
-package se.doverfelt.pixturation.scenes;
+package se.doverfelt.pixturation.scenes.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -7,9 +7,11 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.utils.Align;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
 import se.doverfelt.pixturation.Pixturation;
+import se.doverfelt.pixturation.scenes.AbstractScene;
 import se.doverfelt.pixturation.scenes.components.ColorGrid;
 import se.doverfelt.pixturation.scenes.components.ColorPicker;
 import se.doverfelt.pixturation.utils.CompressionUtils;
@@ -19,13 +21,13 @@ import java.io.IOException;
 /**
  * Created by Rickard on 2016-11-29.
  */
-public class GameScene extends AbstractScene {
+public class DrawGameScene extends AbstractScene {
 
-    @LmlActor("gameWindow")
-    private Window window;
+    @LmlActor("drawGameWindow")
+    private HorizontalGroup window;
 
-    @LmlActor("container")
-    private HorizontalGroup container;
+    @LmlActor("controls")
+    private Window controls;
 
     private ColorPicker colorPicker;
     private ColorGrid grid;
@@ -39,13 +41,13 @@ public class GameScene extends AbstractScene {
     /**
      * @param stage will be filled with actors when the view is passed to a LML parser. Should not be null.
      */
-    public GameScene(Stage stage) {
+    public DrawGameScene(Stage stage) {
         super(stage);
     }
 
     @Override
     public FileHandle getTemplateFile() {
-        return Gdx.files.internal("views/game.xml");
+        return Gdx.files.internal("views/drawGame.xml");
     }
 
     @Override
@@ -80,14 +82,19 @@ public class GameScene extends AbstractScene {
                 }
             });
             grid = new ColorGrid(true, null);
-            window.add(colorPicker);
-            window.add(grid);
+            window.addActor(colorPicker);
+            window.addActor(grid);
+            controls.pad(14, 2, 2, 2);
+            window.pad(10);
             window.pack();
             window.layout();
+            window.setPosition(0, 0, Align.bottomRight);
+            controls.layout();
+            controls.pack();
+            controls.setPosition(getStage().getWidth()/2f, getStage().getHeight()/2f, Align.center);
             //window.setFillParent(true);
             added = true;
-            container.pack();
-            container.layout();
+            //getStage().setDebugAll(true);
         }
     }
 

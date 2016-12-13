@@ -21,6 +21,8 @@ import com.github.czyzby.lml.util.LmlApplicationListener;
 import se.doverfelt.pixturation.models.Game;
 import se.doverfelt.pixturation.models.Player;
 import se.doverfelt.pixturation.scenes.*;
+import se.doverfelt.pixturation.scenes.game.CreateGameScene;
+import se.doverfelt.pixturation.scenes.game.DrawGameScene;
 import se.doverfelt.pixturation.utils.CompressionUtils;
 
 import java.io.IOException;
@@ -70,7 +72,7 @@ public class Pixturation extends LmlApplicationListener {
         addScreen("menu", new MenuScene(new Stage(viewport)));
         addScreen("login", new LoginScene(new Stage(viewport)));
         addScreen("profile", new ProfileScene(new Stage(viewport)));
-        addScreen("game", new GameScene(new Stage(viewport)));
+        addScreen("game", new DrawGameScene(new Stage(viewport)));
         addScreen("createGame", new CreateGameScene(new Stage(viewport)));
 
         setScreen("loading");
