@@ -5,7 +5,7 @@
     <window movable="false">
         <table onecolumn="true">
             <button onclick="continueGame">Continue Game</button>
-            <button onclick="createGame">Create new Game</button>
+            <button onclick="goToCreateGame">Create new Game</button>
             <button onclick="showProfile">Profile</button>
             <button onclick="quit">Quit</button>
         </table>

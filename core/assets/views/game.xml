@@ -2,14 +2,15 @@
 <!DOCTYPE :noop SYSTEM "../lml.dtd">
 <:noop>
     <:log>Init menu window</:log>
-    <horizontalgroup growx="true" id="container">
-        <window id="controls" movable="false">
+    <horizontalgroup growx="true" id="container" fillparent="true">
+        <window id="controls" movable="false" filly="true">
             <verticalgroup grow="true">
-                <textarea id="messages">
+                <textarea id="messages" growy="true">
 
                 </textarea>
                 <horizontalgroup growx="true">
-                    <button>Submit</button>
+                    <button onclick="submit">Submit</button>
+                    <button onclick="back">Back</button>
                 </horizontalgroup>
             </verticalgroup>
         </window>

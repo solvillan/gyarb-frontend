@@ -29,7 +29,7 @@ import java.util.HashMap;
 
 public class Pixturation extends LmlApplicationListener {
 
-    private HashMap<String, AbstractScene> screens = new HashMap<String, AbstractScene>();
+    private static HashMap<String, AbstractScene> screens = new HashMap<String, AbstractScene>();
     private AbstractScene currentScreen = null;
     private AssetManager assets;
     public FitViewport viewport;
@@ -71,6 +71,7 @@ public class Pixturation extends LmlApplicationListener {
         addScreen("login", new LoginScene(new Stage(viewport)));
         addScreen("profile", new ProfileScene(new Stage(viewport)));
         addScreen("game", new GameScene(new Stage(viewport)));
+        addScreen("createGame", new CreateGameScene(new Stage(viewport)));
 
         setScreen("loading");
 	}
@@ -197,7 +198,7 @@ public class Pixturation extends LmlApplicationListener {
         this.currentPlayer = currentPlayer;
     }
 
-    public AbstractScene getScreen(String scene) {
+    public static AbstractScene getScreen(String scene) {
         return screens.get(scene);
     }
 

@@ -2,9 +2,10 @@ package se.doverfelt.pixturation.utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
-import com.badlogic.gdx.graphics.glutils.GLFrameBuffer;
 import com.badlogic.gdx.net.HttpRequestBuilder;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 
 /**
@@ -52,7 +53,7 @@ public class HttpUtils {
     }
 
     public static void get(String path, Net.HttpResponseListener listener, HashMap<String, String> headers) {
-        HttpRequestBuilder request = builder.newRequest().method(Net.HttpMethods.GET).url(BASE_URL + path);
+        HttpRequestBuilder request = builder.newRequest().method(Net.HttpMethods.GET).url(BASE_URL + path.trim());
         for (String k : headers.keySet()) {
             request = request.header(k, headers.get(k));
         }
@@ -76,31 +77,37 @@ public class HttpUtils {
         post(path, data, listener, headers);
     }
 
-    public static Net.HttpResponse postSync(String path, HashMap<String, String> data) {
-        final byte[] status = {0};
-        final Net.HttpResponse[] response = new Net.HttpResponse[1];
+    public static SyncHTTPResponse postSync(String path, HashMap<String, String> data) {
+        final int[] status = {0};
+        final String[] responseBody = new String[1];
+        final boolean[] done = {false};
+        responseBody[0] = "";
         post(path, data, new Net.HttpResponseListener() {
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
-                status[0] = 1;
-                response[0] = httpResponse;
+                status[0] = httpResponse.getStatus().getStatusCode();
+                responseBody[0] = httpResponse.getResultAsString();
+                done[0] = true;
             }
 
             @Override
             public void failed(Throwable t) {
                 status[0] = -1;
-                Gdx.app.error("GetSync", t.getMessage(), t);
+                Gdx.app.error("PostSync", t.getMessage(), t);
+                done[0] = true;
             }
 
             @Override
             public void cancelled() {
                 status[0] = -2;
+                Gdx.app.error("PostSync", "Cancelled!");
+                done[0] = true;
             }
         });
-        while (status[0] == 0) {
+        while (!done[0]) {
             Thread.yield();
         }
-        return response[0];
+        return new SyncHTTPResponse(responseBody[0], status[0]);
     }
 
     public static void post(String path, HashMap<String, String> data, Net.HttpResponseListener listener, HashMap<String, String> headers) {
@@ -112,7 +119,35 @@ public class HttpUtils {
         Gdx.net.sendHttpRequest(request.build(), listener);
     }
 
-    public static class MalformedResponseException extends Exception {
+    public static class SyncHTTPResponse {
+        private String body;
+        private int status;
+
+        SyncHTTPResponse(String body, int status) {
+            this.body = body;
+            this.status = status;
+        }
+
+        public String getBody() {
+            return body;
+        }
+
+        public int getStatus() {
+            return status;
+        }
+    }
+
+    public static class HTTPException extends Exception {
+
+    }
+
+    public static class MalformedResponseException extends HTTPException {
+
+    }
+    public static class AccessForbiddenException extends HTTPException {
+
+    }
+    public static class WrongHTTPStatusException extends HTTPException {
 
     }
 

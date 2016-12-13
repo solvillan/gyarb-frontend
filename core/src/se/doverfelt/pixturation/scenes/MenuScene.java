@@ -59,9 +59,9 @@ public class MenuScene extends AbstractScene {
         return Gdx.files.internal("views/menu.xml");
     }
 
-    @LmlAction("createGame")
-    public void tmp(Actor actor) {
-        Gdx.app.log("Menu", "Button pressed!");
+    @LmlAction("goToCreateGame")
+    public void createGame(Actor actor) {
+        pixturation.shouldSetScreen("createGame");
     }
 
     @LmlAction("showProfile")

@@ -36,7 +36,8 @@ public class CreateGameScene extends AbstractScene {
     public void createGame(Actor actor) {
         try {
             pixturation.setCurrentGame(Game.createGame());
-        } catch (HttpUtils.MalformedResponseException e) {
+            pixturation.shouldSetScreen("menu");
+        } catch (HttpUtils.HTTPException e) {
             e.printStackTrace();
         }
     }
