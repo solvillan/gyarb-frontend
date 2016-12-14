@@ -7,10 +7,12 @@ public class Player {
 
     private final String name;
     private final String email;
+    private final int id;
 
-    public Player(String name, String email) {
+    public Player(String name, String email, int id) {
         this.name = name;
         this.email = email;
+        this.id = id;
     }
 
     public String getName() {
@@ -19,5 +21,14 @@ public class Player {
 
     public String getEmail() {
         return email;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Player && ((Player) obj).getId() == this.id;
+    }
+
+    public int getId() {
+        return id;
     }
 }

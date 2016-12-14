@@ -34,7 +34,7 @@ public class Game {
     public void submitPicture(ColorGrid picture) {
         HashMap<String, String> data = new HashMap<String, String>();
         JsonObject wrapper = new JsonObject();
-        wrapper.add("word", "word");
+        wrapper.add("word", word);
         try {
             wrapper.add("data", CompressionUtils.toGzBase64(picture.toJson()));
         } catch (IOException e) {
@@ -45,7 +45,8 @@ public class Game {
         HttpUtils.post("game/" + this.id + "/submit/picture", data, new Net.HttpResponseListener() {
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
-
+                String response = httpResponse.getResultAsString();
+                Gdx.app.log(httpResponse.getStatus().toString() + ":", response);
             }
 
             @Override
@@ -77,7 +78,7 @@ public class Game {
                 throw new HttpUtils.MalformedResponseException();
             }
             final Game out = new Game(game.getInt("id", Integer.MIN_VALUE), State.DRAW);
-            out.currentPlayer = new Player(game.get("current_player").asObject().getString("name", "NO_NAME"), game.get("current_player").asObject().getString("email", "NO_EMAIL"));
+            out.currentPlayer = new Player(game.get("current_player").asObject().getString("name", "NO_NAME"), game.get("current_player").asObject().getString("email", "NO_EMAIL"), game.get("current_player").asObject().getInt("id", -1));
             HttpUtils.post("game/" + out.id + "/start", new HashMap<String, String>(), new Net.HttpResponseListener() {
                 @Override
                 public void handleHttpResponse(Net.HttpResponse httpResponse) {
@@ -115,6 +116,10 @@ public class Game {
 
     public String getWord() {
         return word;
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
     }
 
     public enum State {
