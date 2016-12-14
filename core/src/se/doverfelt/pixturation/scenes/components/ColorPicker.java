@@ -66,15 +66,9 @@ public class ColorPicker extends Component {
 
     @Override
     public void act(float delta) {
-        if (pixturation.getAssets().isLoaded("Raleway.ttf") && font == null) {
-            FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-            parameter.kerning = true;
-            parameter.genMipMaps = true;
-            parameter.minFilter = Texture.TextureFilter.MipMap;
-            parameter.magFilter = Texture.TextureFilter.MipMap;
-            parameter.size = 24;
-            font = pixturation.getAssets().get("Raleway.ttf", FreeTypeFontGenerator.class).generateFont(parameter);
-            layout = new GlyphLayout(font, "Test");
+        font = pixturation.getFont(24);
+        if (layout == null) {
+            layout = new GlyphLayout(font, "");
         }
         Vector2 mousePos = getMousePos();
         if (mousePos.x > 0 && mousePos.x < getWidth() && mousePos.y > 0 && mousePos.y < 2*(getHeight()/3)) {

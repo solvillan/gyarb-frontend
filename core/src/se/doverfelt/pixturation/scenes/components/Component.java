@@ -40,7 +40,7 @@ public abstract class Component {
         return parent;
     }
 
-    float getX() {
+    public float getX() {
         return posX;
     }
 

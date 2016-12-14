@@ -1,26 +1,17 @@
 package se.doverfelt.pixturation.scenes.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
-import com.badlogic.gdx.utils.Align;
-import com.github.czyzby.lml.annotation.LmlAction;
-import com.github.czyzby.lml.annotation.LmlActor;
 import se.doverfelt.pixturation.Pixturation;
 import se.doverfelt.pixturation.scenes.AbstractScene;
 import se.doverfelt.pixturation.scenes.components.Button;
 import se.doverfelt.pixturation.scenes.components.ColorGrid;
 import se.doverfelt.pixturation.scenes.components.ColorPicker;
-import se.doverfelt.pixturation.utils.CompressionUtils;
-
-import java.io.BufferedWriter;
-import java.io.IOException;
+import se.doverfelt.pixturation.scenes.components.Label;
 
 /**
  * Created by Rickard on 2016-11-29.
@@ -29,14 +20,9 @@ public class DrawGameScene extends AbstractScene {
 
     private ColorPicker colorPicker;
     private ColorGrid grid;
-    private boolean added;
-    private Pixturation pixturation;
     private Batch batch;
-    private Button back;
-
-    public ColorGrid getGrid() {
-        return grid;
-    }
+    private Button back, submit;
+    private Label word, title;
 
     /**
      * @param stage will be filled with actors when the view is passed to a LML parser. Should not be null.
@@ -47,7 +33,6 @@ public class DrawGameScene extends AbstractScene {
 
     @Override
     public void create(final Pixturation pixturation) {
-        this.pixturation = pixturation;
         colorPicker = new ColorPicker(pixturation, this, 10, 10);
         colorPicker.addColorListener(new ColorPicker.ColorListener() {
             @Override
@@ -56,26 +41,32 @@ public class DrawGameScene extends AbstractScene {
             }
         });
         grid = new ColorGrid(true, null, 10 + colorPicker.getWidth(), 10, this);
-        back = new Button(Gdx.graphics.getWidth() - 110, Gdx.graphics.getHeight() - 50, 100, 40, "Back", this, pixturation);
+        word = new Label(20 + colorPicker.getWidth() + grid.getWidth(), Gdx.graphics.getHeight() - 40, this, pixturation, "word!", 32);
+        float space = Gdx.graphics.getWidth() - colorPicker.getWidth() - grid.getWidth() - 40;
+        back = new Button(Gdx.graphics.getWidth() - space/3f - 10, 10, space/3f, 40, "Back", this, pixturation);
         back.setAction(new Button.Action() {
             @Override
             public void onClick() {
                 pixturation.shouldSetScreen("menu");
             }
         });
+        submit = new Button(back.getX() - 2*(space/3f) - 10, 10, 2*(space/3f), 40, "Submit", this, pixturation);
+        submit.setAction(new Button.Action() {
+            @Override
+            public void onClick() {
+                if (pixturation.getCurrentGame() != null) {
+                    pixturation.getCurrentGame().submitPicture(grid);
+                    pixturation.shouldSetScreen("menu");
+                }
+            }
+        });
+        title = new Label(10, Gdx.graphics.getHeight() - 10, this, pixturation, "Draw the word", 32);
         batch = new SpriteBatch();
     }
 
     @Override
     public String getViewId() {
-        return "game";
-    }
-
-
-    public void submit(Actor actor) {
-        if (pixturation.getCurrentGame() != null) {
-            pixturation.getCurrentGame().submitPicture(grid);
-        }
+        return "drawGame";
     }
 
     @Override
@@ -83,6 +74,9 @@ public class DrawGameScene extends AbstractScene {
         colorPicker.act(delta);
         grid.act(delta);
         back.act(delta);
+        submit.act(delta);
+        word.act(delta);
+        title.act(delta);
     }
 
     @Override
@@ -91,5 +85,8 @@ public class DrawGameScene extends AbstractScene {
         colorPicker.draw(this.batch);
         grid.draw(this.batch);
         back.draw(this.batch);
+        submit.draw(this.batch);
+        word.draw(this.batch);
+        title.draw(this.batch);
     }
 }

@@ -8,6 +8,8 @@ import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -45,6 +47,8 @@ public class Pixturation extends LmlApplicationListener {
     private float rend = 0.008f, gend = 0, bend= 0.29f;
     private float fadetime = 10;
     private boolean fade = true;
+
+    private HashMap<Integer, BitmapFont> fonts = new HashMap<Integer, BitmapFont>();
 
     private Game currentGame;
 
@@ -141,6 +145,26 @@ public class Pixturation extends LmlApplicationListener {
         }
 
         Gdx.gl.glClearColor(r, g, b, 1);
+    }
+
+    public BitmapFont getFont(int size) {
+        if (fonts.containsKey(size)) {
+            return fonts.get(size);
+        } else {
+            if (getAssets().isLoaded("Raleway.ttf")) {
+                FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+                parameter.kerning = true;
+                parameter.genMipMaps = true;
+                parameter.minFilter = Texture.TextureFilter.MipMap;
+                parameter.magFilter = Texture.TextureFilter.MipMap;
+                parameter.size = size;
+                BitmapFont font = getAssets().get("Raleway.ttf", FreeTypeFontGenerator.class).generateFont(parameter);
+                fonts.put(size, font);
+                return font;
+            } else {
+                return null;
+            }
+        }
     }
 
     @Override

@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import se.doverfelt.pixturation.Pixturation;
 import se.doverfelt.pixturation.scenes.AbstractScene;
+import se.doverfelt.pixturation.utils.DrawUtils;
 
 /**
  * Created by Rickard on 2016-12-14.
@@ -39,17 +40,10 @@ public class Button extends Component {
 
     @Override
     public void act(float delta) {
-        if (pixturation.getAssets().isLoaded("Raleway.ttf") && font == null) {
-            FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-            parameter.kerning = true;
-            parameter.genMipMaps = true;
-            parameter.minFilter = Texture.TextureFilter.MipMap;
-            parameter.magFilter = Texture.TextureFilter.MipMap;
-            parameter.size = 24;
-            font = pixturation.getAssets().get("Raleway.ttf", FreeTypeFontGenerator.class).generateFont(parameter);
-            layout = new GlyphLayout(font, "Test");
+        font = pixturation.getFont(24);
+        if (layout == null) {
+            layout = new GlyphLayout(font, "");
         }
-
         Vector2 mousePos = getMousePos();
         if (mousePos.x > 0 && mousePos.x < getWidth() && mousePos.y > 0 && mousePos.y < getHeight()) {
             hover = true;
@@ -70,24 +64,21 @@ public class Button extends Component {
 
     @Override
     public void draw(Batch batch) {
+        shape.setAutoShapeType(true);
+
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-        shape.setAutoShapeType(true);
         shape.begin();
-        shape.setColor(Color.WHITE);
         shape.set(ShapeRenderer.ShapeType.Filled);
-        shape.rect(getX(), getY(), width, 5);
-        shape.rect(getX(), getY(), 5, height);
-        shape.rect(getX(), getY() + height - 5, width, 5);
-        shape.rect(getX() + getWidth() - 5, getY(), 5, height);
-
         if (hover) {
             shape.setColor(new Color(1, 1, 1, 0.25f));
             shape.rect(getX(), getY(), getWidth(), getHeight());
         }
 
         shape.end();
+        DrawUtils.drawBoundingRect(getX(), getY(), width, height, 5, shape, Color.WHITE);
         Gdx.gl.glDisable(GL20.GL_BLEND);
+
         if (font != null) {
             batch.begin();
             layout.setText(font, text);
