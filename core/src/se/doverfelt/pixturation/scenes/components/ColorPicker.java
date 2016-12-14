@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -16,43 +17,29 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import se.doverfelt.pixturation.Pixturation;
+import se.doverfelt.pixturation.scenes.AbstractScene;
 
 import java.util.ArrayList;
 
 /**
  * Created by rickard.doverfelt on 2016-11-29.
  */
-public class ColorPicker extends Actor {
+public class ColorPicker extends Component {
 
     private final float DIMENSION;
     private final float DIMENSION_GRID;
     private BitmapFont font;
     private GlyphLayout layout;
-    private BitmapFontCache fontCache;
     private Color currentColor = Color.WHITE;
     private ShapeRenderer shapes;
     private Color[][] colors;
     private ArrayList<ColorListener> changeListeners = new ArrayList<ColorListener>();
-    private Label.LabelStyle style;
-    private Texture debug;
     private SpriteBatch batch = new SpriteBatch();
+    private Pixturation pixturation;
 
-    public ColorPicker(Pixturation pixturation, Skin skin) {
-        style = skin.get(Label.LabelStyle.class);
-        if (pixturation.getAssets().isLoaded("Raleway.ttf")) {
-            FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-            parameter.kerning = true;
-            parameter.genMipMaps = true;
-            parameter.minFilter = Texture.TextureFilter.MipMap;
-            parameter.magFilter = Texture.TextureFilter.MipMap;
-            parameter.size = 24;
-            font = pixturation.getAssets().get("Raleway.ttf", FreeTypeFontGenerator.class).generateFont(parameter);
-
-        }
-        layout = new GlyphLayout(style.font, "Test");
-        fontCache = style.font.newFontCache();
-        fontCache.setText(layout, getX(), getY());
-        debug = pixturation.getAssets().get("badlogic.jpg");
+    public ColorPicker(Pixturation pixturation, AbstractScene parent, float posX, float posY) {
+        super(posX, posY, parent);
+        this.pixturation = pixturation;
         shapes = new ShapeRenderer();
         DIMENSION_GRID = (Gdx.graphics.getHeight() - 32) / 32;
         int colorW = 4;
@@ -79,8 +66,17 @@ public class ColorPicker extends Actor {
 
     @Override
     public void act(float delta) {
-        super.act(delta);
-        Vector2 mousePos = screenToLocalCoordinates(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
+        if (pixturation.getAssets().isLoaded("Raleway.ttf") && font == null) {
+            FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+            parameter.kerning = true;
+            parameter.genMipMaps = true;
+            parameter.minFilter = Texture.TextureFilter.MipMap;
+            parameter.magFilter = Texture.TextureFilter.MipMap;
+            parameter.size = 24;
+            font = pixturation.getAssets().get("Raleway.ttf", FreeTypeFontGenerator.class).generateFont(parameter);
+            layout = new GlyphLayout(font, "Test");
+        }
+        Vector2 mousePos = getMousePos();
         if (mousePos.x > 0 && mousePos.x < getWidth() && mousePos.y > 0 && mousePos.y < 2*(getHeight()/3)) {
             if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
                 setCurrentColor(mousePos.x, mousePos.y);
@@ -120,8 +116,10 @@ public class ColorPicker extends Actor {
     }
 
     @Override
-    public void draw(Batch batch, float parentAlpha) {
+    public void draw(Batch batch) {
         //super.draw(batch, parentAlpha);
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         shapes.setAutoShapeType(true);
         shapes.begin();
         shapes.setProjectionMatrix(batch.getProjectionMatrix());
@@ -130,37 +128,44 @@ public class ColorPicker extends Actor {
             for (int y = 0; y < colors[x].length; y++) {
                 if (colors[x][y] != null) {
                     shapes.setColor(colors[x][y]);
-                    Vector2 pos = localToStageCoordinates(new Vector2(DIMENSION*x, DIMENSION*y));
+                    Vector2 pos = localToScreenCoordinates(new Vector2(DIMENSION*x, DIMENSION*y));
                     shapes.rect(pos.x, pos.y, DIMENSION, DIMENSION);
                 } else {
                     shapes.setColor(Color.WHITE);
-                    Vector2 pos = localToStageCoordinates(new Vector2(DIMENSION*x, DIMENSION*y));
+                    Vector2 pos = localToScreenCoordinates(new Vector2(DIMENSION*x, DIMENSION*y));
                     shapes.rect(pos.x, pos.y, DIMENSION, DIMENSION);
                 }
             }
         }
         shapes.setColor(currentColor);
-        Vector2 cur = localToStageCoordinates(new Vector2(0, DIMENSION*colors[0].length));
+        Vector2 cur = localToScreenCoordinates(new Vector2(0, DIMENSION*colors[0].length));
         shapes.rect(cur.x, cur.y, getWidth(), getHeight()/3);
 
         shapes.set(ShapeRenderer.ShapeType.Line);
         shapes.setColor(Color.LIGHT_GRAY);
         for (int x = 0; x < colors.length; x++) {
             for (int y = 0; y < colors[0].length; y++) {
-                Vector2 pos = localToStageCoordinates(new Vector2(DIMENSION*x, DIMENSION*y));
+                Vector2 pos = localToScreenCoordinates(new Vector2(DIMENSION*x, DIMENSION*y));
                 shapes.rect(pos.x, pos.y, DIMENSION, DIMENSION);
             }
         }
-        shapes.end();
 
-        layout.setText(font, "#" + currentColor.toString());
-        cur = localToStageCoordinates(new Vector2(getWidth() / 2f - layout.width/2f, DIMENSION*colors[0].length + (getHeight()/3f) - layout.height/2f));
-        this.batch.setProjectionMatrix(getStage().getCamera().combined);
-        this.batch.begin();
-        font.setColor(1 - currentColor.r, 1 - currentColor.g, 1 - currentColor.b, 1);
-        font.draw(this.batch, "#" + currentColor.toString(), cur.x, cur.y);
+        shapes.set(ShapeRenderer.ShapeType.Filled);
+
+        layout.setText(font, "#" + currentColor.toString().substring(0, currentColor.toString().length()-2));
+        cur = localToScreenCoordinates(new Vector2(0, getHeight() - layout.height * 2 ));
+
+        shapes.setColor(0, 0, 0, 0.75f);
+        shapes.rect(cur.x, cur.y, getWidth(), layout.height * 2);
+
+        shapes.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
+        batch.begin();
+        cur = localToScreenCoordinates(new Vector2(getWidth() / 2f - layout.width/2f, DIMENSION*colors[0].length + (getHeight()/3f) - layout.height/2f));
+        font.setColor(Color.WHITE);
+        font.draw(batch, "#" + currentColor.toString().substring(0, currentColor.toString().length()-2), cur.x, cur.y);
         //this.batch.draw(debug, cur.x, cur.y);
-        this.batch.end();
+        batch.end();
     }
 
     public interface ColorListener {

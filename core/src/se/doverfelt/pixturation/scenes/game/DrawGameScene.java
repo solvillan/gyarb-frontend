@@ -3,6 +3,8 @@ package se.doverfelt.pixturation.scenes.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
@@ -12,10 +14,12 @@ import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
 import se.doverfelt.pixturation.Pixturation;
 import se.doverfelt.pixturation.scenes.AbstractScene;
+import se.doverfelt.pixturation.scenes.components.Button;
 import se.doverfelt.pixturation.scenes.components.ColorGrid;
 import se.doverfelt.pixturation.scenes.components.ColorPicker;
 import se.doverfelt.pixturation.utils.CompressionUtils;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 
 /**
@@ -23,16 +27,12 @@ import java.io.IOException;
  */
 public class DrawGameScene extends AbstractScene {
 
-    @LmlActor("drawGameWindow")
-    private HorizontalGroup window;
-
-    @LmlActor("controls")
-    private Window controls;
-
     private ColorPicker colorPicker;
     private ColorGrid grid;
     private boolean added;
     private Pixturation pixturation;
+    private Batch batch;
+    private Button back;
 
     public ColorGrid getGrid() {
         return grid;
@@ -46,13 +46,24 @@ public class DrawGameScene extends AbstractScene {
     }
 
     @Override
-    public FileHandle getTemplateFile() {
-        return Gdx.files.internal("views/drawGame.xml");
-    }
-
-    @Override
-    public void create(Pixturation pixturation) {
+    public void create(final Pixturation pixturation) {
         this.pixturation = pixturation;
+        colorPicker = new ColorPicker(pixturation, this, 10, 10);
+        colorPicker.addColorListener(new ColorPicker.ColorListener() {
+            @Override
+            public void changed(Color color) {
+                grid.setCurrentColor(color);
+            }
+        });
+        grid = new ColorGrid(true, null, 10 + colorPicker.getWidth(), 10, this);
+        back = new Button(Gdx.graphics.getWidth() - 110, Gdx.graphics.getHeight() - 50, 100, 40, "Back", this, pixturation);
+        back.setAction(new Button.Action() {
+            @Override
+            public void onClick() {
+                pixturation.shouldSetScreen("menu");
+            }
+        });
+        batch = new SpriteBatch();
     }
 
     @Override
@@ -60,11 +71,7 @@ public class DrawGameScene extends AbstractScene {
         return "game";
     }
 
-    @LmlAction("back")
-    public void back(Actor actor) {
-        pixturation.shouldSetScreen("menu");
-    }
-    @LmlAction("submit")
+
     public void submit(Actor actor) {
         if (pixturation.getCurrentGame() != null) {
             pixturation.getCurrentGame().submitPicture(grid);
@@ -73,33 +80,16 @@ public class DrawGameScene extends AbstractScene {
 
     @Override
     public void update(float delta) {
-        if (window != null && !added) {
-            colorPicker = new ColorPicker(pixturation, pixturation.skin);
-            colorPicker.addColorListener(new ColorPicker.ColorListener() {
-                @Override
-                public void changed(Color color) {
-                    grid.setCurrentColor(color);
-                }
-            });
-            grid = new ColorGrid(true, null);
-            window.addActor(colorPicker);
-            window.addActor(grid);
-            controls.pad(14, 2, 2, 2);
-            window.pad(10);
-            window.pack();
-            window.layout();
-            window.setPosition(0, 0, Align.bottomRight);
-            controls.layout();
-            controls.pack();
-            controls.setPosition(getStage().getWidth()/2f, getStage().getHeight()/2f, Align.center);
-            //window.setFillParent(true);
-            added = true;
-            //getStage().setDebugAll(true);
-        }
+        colorPicker.act(delta);
+        grid.act(delta);
+        back.act(delta);
     }
 
-    @LmlAction("initGameScene")
-    public void initGameScene(Actor actor) {
-
+    @Override
+    public void render(float delta) {
+        super.render(delta);
+        colorPicker.draw(this.batch);
+        grid.draw(this.batch);
+        back.draw(this.batch);
     }
 }
