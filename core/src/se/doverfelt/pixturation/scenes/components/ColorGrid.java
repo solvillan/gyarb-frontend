@@ -3,29 +3,21 @@ package se.doverfelt.pixturation.scenes.components;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Cursor;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Align;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonValue;
+import se.doverfelt.pixturation.scenes.AbstractScene;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
  * Created by rickard on 2016-11-24.
  */
-public class ColorGrid extends Actor {
+public class ColorGrid extends Component {
 
     private Color[][] tiles;
     private boolean editable;
@@ -33,8 +25,8 @@ public class ColorGrid extends Actor {
     private final float DIMENSION;
     private Color currentColor = Color.WHITE;
 
-    public ColorGrid(final boolean editable, Color[][] tiles) {
-        super();
+    public ColorGrid(final boolean editable, Color[][] tiles, float posX, float posY, AbstractScene parent) {
+        super(posX, posY, parent);
         DIMENSION = (Gdx.graphics.getHeight() - 32) / 32;
         this.editable = editable;
         if (tiles != null) {
@@ -48,20 +40,12 @@ public class ColorGrid extends Actor {
             }
         }
         shapes = new ShapeRenderer();
-
-        if (editable) {
-            setTouchable(Touchable.enabled);
-        } else {
-            setTouchable(Touchable.disabled);
-        }
-
     }
 
     @Override
     public void act(float delta) {
-        super.act(delta);
         if (editable) {
-            Vector2 mousePos = screenToLocalCoordinates(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
+            Vector2 mousePos = getMousePos();
             if (mousePos.x > 0 && mousePos.x < getWidth() && mousePos.y > 0 && mousePos.y < getHeight()) {
                 if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
                     changeTile(mousePos.x, mousePos.y, currentColor);
@@ -93,7 +77,7 @@ public class ColorGrid extends Actor {
     }
 
     @Override
-    public void draw(Batch batch, float parentAlpha) {
+    public void draw(Batch batch) {
         shapes.setAutoShapeType(true);
         shapes.begin();
         shapes.setProjectionMatrix(batch.getProjectionMatrix());
@@ -101,7 +85,7 @@ public class ColorGrid extends Actor {
         for (int x = 0; x < tiles.length; x++) {
             for (int y = 0; y < tiles[x].length; y++) {
                 shapes.setColor(tiles[x][y]);
-                Vector2 pos = localToStageCoordinates(new Vector2(DIMENSION*x, DIMENSION*y));
+                Vector2 pos = localToScreenCoordinates(new Vector2(DIMENSION*x, DIMENSION*y));
                 shapes.rect(pos.x, pos.y, DIMENSION, DIMENSION);
             }
         }
@@ -109,7 +93,7 @@ public class ColorGrid extends Actor {
         shapes.setColor(Color.LIGHT_GRAY);
         for (int x = 0; x < 32; x++) {
             for (int y = 0; y < 32; y++) {
-                Vector2 pos = localToStageCoordinates(new Vector2(DIMENSION*x, DIMENSION*y));
+                Vector2 pos = localToScreenCoordinates(new Vector2(DIMENSION*x, DIMENSION*y));
                 shapes.rect(pos.x, pos.y, DIMENSION, DIMENSION);
             }
         }
