@@ -23,6 +23,7 @@ public class DrawGameScene extends AbstractScene {
     private Batch batch;
     private Button back, submit;
     private Label word, title;
+    private Pixturation pixturation;
 
     /**
      * @param stage will be filled with actors when the view is passed to a LML parser. Should not be null.
@@ -33,6 +34,7 @@ public class DrawGameScene extends AbstractScene {
 
     @Override
     public void create(final Pixturation pixturation) {
+        this.pixturation = pixturation;
         colorPicker = new ColorPicker(pixturation, this, 10, 10);
         colorPicker.addColorListener(new ColorPicker.ColorListener() {
             @Override
@@ -41,7 +43,7 @@ public class DrawGameScene extends AbstractScene {
             }
         });
         grid = new ColorGrid(true, null, 10 + colorPicker.getWidth(), 10, this);
-        word = new Label(20 + colorPicker.getWidth() + grid.getWidth(), Gdx.graphics.getHeight() - 40, this, pixturation, "word!", 32);
+        word = new Label(20 + colorPicker.getWidth() + grid.getWidth(), Gdx.graphics.getHeight() - 40, this, pixturation, (pixturation.getCurrentGame() != null ? pixturation.getCurrentGame().getWord() : "No Game Active"), 32);
         float space = Gdx.graphics.getWidth() - colorPicker.getWidth() - grid.getWidth() - 40;
         back = new Button(Gdx.graphics.getWidth() - space/3f - 10, 10, space/3f, 40, "Back", this, pixturation);
         back.setAction(new Button.Action() {
@@ -77,6 +79,7 @@ public class DrawGameScene extends AbstractScene {
         submit.act(delta);
         word.act(delta);
         title.act(delta);
+        word.setText((pixturation.getCurrentGame() != null ? pixturation.getCurrentGame().getWord() : "No Game Active"));
     }
 
     @Override

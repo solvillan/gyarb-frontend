@@ -24,6 +24,7 @@ public class Game {
     private State state;
     private Color[][] picture;
     private Player currentPlayer;
+    private String word;
 
     private Game(long id, State state) {
         this.id = id;
@@ -81,6 +82,12 @@ public class Game {
                 @Override
                 public void handleHttpResponse(Net.HttpResponse httpResponse) {
                     out.active = true;
+                    String result = httpResponse.getResultAsString();
+                    JsonValue base = Json.parse(result);
+                    if (base.isObject()) {
+                        JsonObject game = base.asObject().get("game").asObject();
+                        out.word = game.getString("current_word", "NO_WORD");
+                    }
                 }
 
                 @Override
@@ -104,6 +111,10 @@ public class Game {
     public static Game getGame(long id) {
         Net.HttpResponse response = HttpUtils.getSync("game/" + id + "/poll");
         return new Game(id, State.DRAW);
+    }
+
+    public String getWord() {
+        return word;
     }
 
     public enum State {

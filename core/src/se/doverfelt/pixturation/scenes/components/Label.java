@@ -55,4 +55,8 @@ public class Label extends Component {
     public float getHeight() {
         return layout.height;
     }
+
+    public void setText(String text) {
+        this.text = text;
+    }
 }
