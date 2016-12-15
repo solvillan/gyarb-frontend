@@ -8,10 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import se.doverfelt.pixturation.Pixturation;
 import se.doverfelt.pixturation.scenes.AbstractScene;
-import se.doverfelt.pixturation.scenes.components.Button;
-import se.doverfelt.pixturation.scenes.components.ColorGrid;
-import se.doverfelt.pixturation.scenes.components.ColorPicker;
-import se.doverfelt.pixturation.scenes.components.Label;
+import se.doverfelt.pixturation.scenes.components.*;
 
 /**
  * Created by Rickard on 2016-11-29.
@@ -23,6 +20,7 @@ public class DrawGameScene extends AbstractScene {
     private Batch batch;
     private Button back, submit;
     private Label word, title;
+    private TextField textField;
     private Pixturation pixturation;
 
     /**
@@ -62,6 +60,7 @@ public class DrawGameScene extends AbstractScene {
                 }
             }
         });
+        textField = new TextField(submit.getX(), 60, space, 40, this, pixturation);
         title = new Label(10, Gdx.graphics.getHeight() - 10, this, pixturation, "Draw the word", 32);
         batch = new SpriteBatch();
     }
@@ -79,6 +78,7 @@ public class DrawGameScene extends AbstractScene {
         submit.act(delta);
         word.act(delta);
         title.act(delta);
+        textField.act(delta);
         word.setText((pixturation.getCurrentGame() != null ? pixturation.getCurrentGame().getWord() : "No Game Active"));
         if (pixturation.getCurrentGame() != null) {
             if (!pixturation.getCurrentGame().getCurrentPlayer().equals(pixturation.getCurrentPlayer())) {
@@ -96,5 +96,6 @@ public class DrawGameScene extends AbstractScene {
         submit.draw(this.batch);
         word.draw(this.batch);
         title.draw(this.batch);
+        textField.draw(this.batch);
     }
 }
