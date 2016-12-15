@@ -39,16 +39,8 @@ public class MenuScene extends AbstractScene {
     public void show() {
         super.show();
         batch = new SpriteBatch();
-        if (pixturation.getAssets().isLoaded("Raleway.ttf")) {
-            FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-            parameter.kerning = true;
-            parameter.genMipMaps = true;
-            parameter.minFilter = Texture.TextureFilter.MipMap;
-            parameter.magFilter = Texture.TextureFilter.MipMap;
-            parameter.size = 48;
-            font = pixturation.getAssets().get("Raleway.ttf", FreeTypeFontGenerator.class).generateFont(parameter);
-            layout = new GlyphLayout(font, pixturation.getCurrentPlayer().getName());
-        }
+        font = pixturation.getFont(48);
+        layout = new GlyphLayout(font, pixturation.getCurrentPlayer().getName());
         if (pixturation.getAssets().isLoaded("logo.png")) {
             img = pixturation.getAssets().get("logo.png");
         }
@@ -76,7 +68,7 @@ public class MenuScene extends AbstractScene {
 
     @LmlAction("continueGame")
     public void continueGame(Actor actor) {
-        pixturation.shouldSetScreen("game");
+        pixturation.shouldSetScreen("continueGame");
     }
 
     @Override

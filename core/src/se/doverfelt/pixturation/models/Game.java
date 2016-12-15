@@ -4,6 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.net.HttpStatus;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.StringBuilder;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -24,11 +27,13 @@ public class Game {
     private State state;
     private Color[][] picture;
     private Player currentPlayer;
+    private Array<Player> players;
     private String word;
 
     private Game(long id, State state) {
         this.id = id;
         this.state = state;
+        players = new Array<Player>();
     }
 
     public void submitPicture(ColorGrid picture) {
@@ -79,6 +84,7 @@ public class Game {
             }
             final Game out = new Game(game.getInt("id", Integer.MIN_VALUE), State.DRAW);
             out.currentPlayer = new Player(game.get("current_player").asObject().getString("name", "NO_NAME"), game.get("current_player").asObject().getString("email", "NO_EMAIL"), game.get("current_player").asObject().getInt("id", -1));
+            out.players.add(out.currentPlayer);
             HttpUtils.post("game/" + out.id + "/start", new HashMap<String, String>(), new Net.HttpResponseListener() {
                 @Override
                 public void handleHttpResponse(Net.HttpResponse httpResponse) {
@@ -109,8 +115,16 @@ public class Game {
         }
     }
 
+    public static Game createGame(JsonObject object) {
+        Game game = new Game(object.getLong("id", -1), stateFromNum(object.getInt("status", -1)));
+        game.word = object.getString("current_word", "NO_WORD");
+        game.currentPlayer = Player.createPlayer(object.getLong("current_player", -1));
+        game.players.add(game.currentPlayer);
+        return game;
+    }
+
     public static Game getGame(long id) {
-        Net.HttpResponse response = HttpUtils.getSync("game/" + id + "/poll");
+        HttpUtils.SyncHTTPResponse response = HttpUtils.getSync("game/" + id + "/poll");
         return new Game(id, State.DRAW);
     }
 
@@ -122,8 +136,46 @@ public class Game {
         return currentPlayer;
     }
 
+    public static State stateFromNum(int num) {
+        switch (num) {
+            case 1:
+                return State.DRAW;
+            case 2:
+                return State.GUESS;
+            case 255:
+                return State.WAIT;
+            case 0:
+                return State.WAIT_FOR_START;
+            default:
+                return State.INVALID;
+        }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Game ");
+        builder.append(id);
+        builder.append(" - ");
+        builder.append(players.toString(", "));
+        return builder.toString();
+    }
+
+    public Array<Player> getPlayers() {
+        return players;
+    }
+
+    public State getState() {
+        return state;
+    }
+
     public enum State {
-        DRAW, GUESS, WAIT, WAIT_FOR_START
+        DRAW((byte)1), GUESS((byte) 2), WAIT((byte)254), WAIT_FOR_START((byte)0), INVALID((byte)255);
+
+        byte num;
+        State(byte num) {
+            this.num = num;
+        }
     }
 
 }

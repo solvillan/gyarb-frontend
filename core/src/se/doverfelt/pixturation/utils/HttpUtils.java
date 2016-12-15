@@ -17,31 +17,37 @@ public class HttpUtils {
     private static final String BASE_URL = "http://localhost/";
     private static String token;
 
-    public static Net.HttpResponse getSync(String path) {
-        final byte[] status = {0};
-        final Net.HttpResponse[] response = new Net.HttpResponse[1];
+    public static SyncHTTPResponse getSync(String path) {
+        final int[] status = {0};
+        final String[] responseBody = new String[1];
+        final boolean[] done = {false};
+        responseBody[0] = "";
         get(path, new Net.HttpResponseListener() {
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
-                status[0] = 1;
-                response[0] = httpResponse;
+                status[0] = httpResponse.getStatus().getStatusCode();
+                responseBody[0] = httpResponse.getResultAsString();
+                done[0] = true;
             }
 
             @Override
             public void failed(Throwable t) {
                 status[0] = -1;
-                Gdx.app.error("GetSync", t.getMessage(), t);
+                Gdx.app.error("PostSync", t.getMessage(), t);
+                done[0] = true;
             }
 
             @Override
             public void cancelled() {
                 status[0] = -2;
+                Gdx.app.error("PostSync", "Cancelled!");
+                done[0] = true;
             }
         });
-        while (status[0] == 0) {
+        while (!done[0]) {
             Thread.yield();
         }
-        return response[0];
+        return new SyncHTTPResponse(responseBody[0], status[0]);
     }
 
     public static void get(String path, Net.HttpResponseListener listener) {
