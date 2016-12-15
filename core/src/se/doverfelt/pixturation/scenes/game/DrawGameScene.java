@@ -20,7 +20,6 @@ public class DrawGameScene extends AbstractScene {
     private Batch batch;
     private Button back, submit;
     private Label word, title;
-    private TextField textField;
     private Pixturation pixturation;
 
     /**
@@ -60,7 +59,6 @@ public class DrawGameScene extends AbstractScene {
                 }
             }
         });
-        textField = new TextField(submit.getX(), 60, space, 40, this, pixturation);
         title = new Label(10, Gdx.graphics.getHeight() - 10, this, pixturation, "Draw the word", 32);
         batch = new SpriteBatch();
     }
@@ -78,7 +76,6 @@ public class DrawGameScene extends AbstractScene {
         submit.act(delta);
         word.act(delta);
         title.act(delta);
-        textField.act(delta);
         word.setText((pixturation.getCurrentGame() != null ? pixturation.getCurrentGame().getWord() : "No Game Active"));
         if (pixturation.getCurrentGame() != null) {
             if (!pixturation.getCurrentGame().getCurrentPlayer().equals(pixturation.getCurrentPlayer())) {
@@ -96,6 +93,5 @@ public class DrawGameScene extends AbstractScene {
         submit.draw(this.batch);
         word.draw(this.batch);
         title.draw(this.batch);
-        textField.draw(this.batch);
     }
 }
