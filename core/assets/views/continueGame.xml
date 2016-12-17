@@ -9,12 +9,12 @@
                 <label id="gameName"></label>
             </:row>
             <:row>
-                <list growx="true" growy="true" align="center" id="gamelist" onclick="previewGame"></list>
+                <scrollpane grow="true"><list growx="true" growy="true" align="center" id="gamelist" onclick="previewGame"></list></scrollpane>
                 <list minwidth="500" growx="true" growy="true" id="gamePlayers"></list>
             </:row>
             <:row>
-                <button align="center" growx="true" onclick="goToGame">Go!</button>
-                <:cell/>
+                <button align="center" growx="true" onclick="back">Back</button>
+                <button align="center" id="goBtn" growx="true" onclick="goToGame" disabled="true">Go!</button>
             </:row>
         <!--</table>-->
 

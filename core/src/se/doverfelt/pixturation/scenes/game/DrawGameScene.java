@@ -78,7 +78,7 @@ public class DrawGameScene extends AbstractScene {
         title.act(delta);
         word.setText((pixturation.getCurrentGame() != null ? pixturation.getCurrentGame().getWord() : "No Game Active"));
         if (pixturation.getCurrentGame() != null) {
-            if (!pixturation.getCurrentGame().getCurrentPlayer().equals(pixturation.getCurrentPlayer())) {
+            if (!pixturation.getCurrentGame().getCurrentPlayer().equals(Pixturation.getCurrentPlayer())) {
                 word.setText("Not Current Player!");
             }
         }

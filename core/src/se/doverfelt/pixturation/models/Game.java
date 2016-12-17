@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.StringBuilder;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import se.doverfelt.pixturation.Pixturation;
 import se.doverfelt.pixturation.scenes.components.ColorGrid;
 import se.doverfelt.pixturation.utils.CompressionUtils;
 import se.doverfelt.pixturation.utils.HttpUtils;
@@ -64,6 +65,35 @@ public class Game {
 
             }
         });
+    }
+
+    public void submitGuess(String guess) {
+        HashMap<String, String> data = new HashMap<String, String>();
+        JsonObject wrapper = new JsonObject();
+        wrapper.add("guess", guess);
+        Gdx.app.log("SubmitGuess", wrapper.toString());
+        data.put("payload", wrapper.toString());
+        HttpUtils.post("game/" + this.id + "/submit/guess", data, new Net.HttpResponseListener() {
+            @Override
+            public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                String response = httpResponse.getResultAsString();
+                Gdx.app.log(httpResponse.getStatus().toString() + ":", response);
+            }
+
+            @Override
+            public void failed(Throwable t) {
+
+            }
+
+            @Override
+            public void cancelled() {
+
+            }
+        });
+    }
+
+    public boolean canMakeMove() {
+        return (state == State.DRAW || state == State.GUESS) && !(state == State.DRAW && currentPlayer != Pixturation.getCurrentPlayer());
     }
 
     public static Game createGame() throws HttpUtils.MalformedResponseException, HttpUtils.AccessForbiddenException, HttpUtils.WrongHTTPStatusException {

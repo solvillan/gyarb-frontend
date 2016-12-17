@@ -52,19 +52,19 @@ public class GuessGameScene extends AbstractScene {
             @Override
             public void onClick() {
                 if (pixturation.getCurrentGame() != null) {
-                    pixturation.getCurrentGame().submitPicture(grid);
+                    pixturation.getCurrentGame().submitGuess(textField.getText());
                     pixturation.shouldSetScreen("menu");
                 }
             }
         });
-        textField = new TextField(submit.getX(), 60, space, 40, this, pixturation);
+        textField = new TextField(submit.getX(), 60, space + 10, 40, this, pixturation);
         title = new Label(10, Gdx.graphics.getHeight() - 10, this, pixturation, "Guess the word", 32);
         batch = new SpriteBatch();
     }
 
     @Override
     public String getViewId() {
-        return null;
+        return "guessGame";
     }
 
     @Override
@@ -80,6 +80,11 @@ public class GuessGameScene extends AbstractScene {
     @Override
     public void render(float delta) {
         super.render(delta);
-        
+        submit.draw(batch);
+        back.draw(batch);
+        title.draw(batch);
+        textField.draw(batch);
+        grid.draw(batch);
+        colorPicker.draw(batch);
     }
 }

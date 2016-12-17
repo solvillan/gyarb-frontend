@@ -144,4 +144,12 @@ public class TextField extends Component implements InputProcessor {
     public boolean scrolled(int amount) {
         return false;
     }
+
+    public String getText() {
+        String out = "";
+        for (char c : chars) {
+            out += c;
+        }
+        return out;
+    }
 }

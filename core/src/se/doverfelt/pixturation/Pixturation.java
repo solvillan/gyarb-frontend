@@ -26,6 +26,7 @@ import se.doverfelt.pixturation.scenes.*;
 import se.doverfelt.pixturation.scenes.game.ContinueGameScene;
 import se.doverfelt.pixturation.scenes.game.CreateGameScene;
 import se.doverfelt.pixturation.scenes.game.DrawGameScene;
+import se.doverfelt.pixturation.scenes.game.GuessGameScene;
 import se.doverfelt.pixturation.utils.CompressionUtils;
 
 import java.io.IOException;
@@ -40,7 +41,7 @@ public class Pixturation extends LmlApplicationListener {
     public FitViewport viewport;
     public Skin skin;
     private String nextScreen;
-    private Player currentPlayer;
+    private static Player currentPlayer;
     private OrthographicCamera camera;
 
     private float rstart = 0.45f, gstart = 0, bstart= 0;
@@ -60,14 +61,6 @@ public class Pixturation extends LmlApplicationListener {
 		initAssets();
         super.create();
 
-        try {
-            String comp = CompressionUtils.toGzBase64("Hello, and please feel and please feel and please feel and please feel and please feel and please feel and please feel and please feel and please feel and please feel and please feel and please feel and please feel welcome!");
-            Gdx.app.log("Compressed", comp);
-            Gdx.app.log("Decompressed", CompressionUtils.fromGzBase64(comp));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
 
@@ -80,6 +73,7 @@ public class Pixturation extends LmlApplicationListener {
         addScreen("drawGame", new DrawGameScene(new Stage(viewport)));
         addScreen("createGame", new CreateGameScene(new Stage(viewport)));
         addScreen("continueGame", new ContinueGameScene(new Stage(viewport)));
+        addScreen("guessGame", new GuessGameScene(new Stage(viewport)));
 
         setScreen("loading");
 	}
@@ -218,12 +212,12 @@ public class Pixturation extends LmlApplicationListener {
         return assets;
     }
 
-    public Player getCurrentPlayer() {
+    public static Player getCurrentPlayer() {
         return currentPlayer;
     }
 
     public void setCurrentPlayer(Player currentPlayer) {
-        this.currentPlayer = currentPlayer;
+        Pixturation.currentPlayer = currentPlayer;
     }
 
     public static AbstractScene getScreen(String scene) {

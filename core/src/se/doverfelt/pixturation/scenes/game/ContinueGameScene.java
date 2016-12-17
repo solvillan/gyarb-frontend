@@ -58,8 +58,8 @@ public class ContinueGameScene extends AbstractScene {
 
     @Override
     public void update(float delta) {
-        if (!added && pixturation.getCurrentPlayer() != null) {
-            gamelist.setItems(pixturation.getCurrentPlayer().getGames());
+        if (!added && Pixturation.getCurrentPlayer() != null) {
+            gamelist.setItems(Pixturation.getCurrentPlayer().getGames());
             gamelist.layout();
             gamelist.pack();
             root.layout();
@@ -71,8 +71,14 @@ public class ContinueGameScene extends AbstractScene {
 
     @LmlAction("goToGame")
     public void goToGame(Actor actor) {
-        pixturation.setCurrentGame(gamelist.getSelected());
-        pixturation.shouldSetScreen("drawGame");
+        if (!goBtn.isDisabled()) {
+            pixturation.setCurrentGame(gamelist.getSelected());
+            if (pixturation.getCurrentGame().getState() == Game.State.DRAW) {
+                pixturation.shouldSetScreen("drawGame");
+            } else {
+                pixturation.shouldSetScreen("guessGame");
+            }
+        }
     }
 
     @LmlAction("previewGame")
@@ -80,7 +86,12 @@ public class ContinueGameScene extends AbstractScene {
         Game sel = gamelist.getSelected();
         gameName.setText(sel.toString() + " | State: " + sel.getState());
         gamePlayers.setItems(sel.getPlayers());
+        goBtn.setDisabled(!sel.canMakeMove());
         root.layout();
-        //root.pack();
+    }
+
+    @LmlAction("back")
+    public void back(Actor actor) {
+        pixturation.shouldSetScreen("menu");
     }
 }
