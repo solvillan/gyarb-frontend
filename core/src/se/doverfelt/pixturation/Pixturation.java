@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -20,16 +19,14 @@ import com.github.czyzby.lml.parser.LmlParser;
 import com.github.czyzby.lml.parser.impl.tag.Dtd;
 import com.github.czyzby.lml.util.Lml;
 import com.github.czyzby.lml.util.LmlApplicationListener;
-import se.doverfelt.pixturation.models.Game;
-import se.doverfelt.pixturation.models.Player;
+import se.doverfelt.pixturation.net.models.Game;
+import se.doverfelt.pixturation.net.models.Player;
 import se.doverfelt.pixturation.scenes.*;
 import se.doverfelt.pixturation.scenes.game.ContinueGameScene;
 import se.doverfelt.pixturation.scenes.game.CreateGameScene;
 import se.doverfelt.pixturation.scenes.game.DrawGameScene;
 import se.doverfelt.pixturation.scenes.game.GuessGameScene;
-import se.doverfelt.pixturation.utils.CompressionUtils;
 
-import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
 

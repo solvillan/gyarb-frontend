@@ -2,8 +2,7 @@
 <!DOCTYPE :noop SYSTEM "../lml.dtd">
 <:noop>
     <:log>Init continue game window</:log>
-    <window growx="true" growy="true" id="continueRoot" movable="false" fillparent="true">
-        <!--<table fillparent="true">-->
+    <window growx="true" growy="true" id="continueRoot" movable="false">
             <:row>
                 <label>Games</label>
                 <label id="gameName"></label>
@@ -16,20 +15,5 @@
                 <button align="center" growx="true" onclick="back">Back</button>
                 <button align="center" id="goBtn" growx="true" onclick="goToGame" disabled="true">Go!</button>
             </:row>
-        <!--</table>-->
-
-
-        <!--<horizontalgroup fillparent="true">
-            <verticalgroup fillx="true" growx="true" expand="true">
-                <label align="center">Games</label>
-                <list align="center" id="gamelist" onclick="previewGame">
-                </list>
-                <button align="center" growx="true" onclick="goToGame">Go!</button>
-            </verticalgroup>
-            <verticalgroup fillx="true" growx="true" expand="true">
-                <label id="gameName"></label>
-                <list id="gamePlayers"></list>
-            </verticalgroup>
-        </horizontalgroup>-->
     </window>
 </:noop>

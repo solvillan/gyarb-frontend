@@ -3,11 +3,22 @@
 <:noop>
     <:log>Init create game window</:log>
     <window id="controls" movable="false">
-        <verticalgroup grow="true">
-
-            <horizontalgroup growx="true">
-                <button onclick="createGame">Create Game!</button>
-            </horizontalgroup>
-        </verticalgroup>
+        <:row>
+            <label>Create game</label>
+            <label align="right">Added players</label>
+        </:row>
+        <:row>
+            <table onecolumn="true">
+                <scrollpane grow="true">
+                    <list growx="true" growy="true" align="center" id="allplayers" onclick="playerSelected"></list>
+                </scrollpane>
+                <button growx="true" onclick="addPlayer" id="addPlayerBtn">Add player</button>
+            </table>
+            <list minwidth="500" growx="true" growy="true" id="gamePlayers"></list>
+        </:row>
+        <:row>
+            <button align="center" growx="true" onclick="back">Back</button>
+            <button align="center" id="goBtn" growx="true" onclick="goToGame" disabled="true">Go!</button>
+        </:row>
     </window>
 </:noop>

@@ -1,13 +1,13 @@
-package se.doverfelt.pixturation.models;
+package se.doverfelt.pixturation.net.models;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.net.HttpStatus;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.StringBuilder;
 import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import se.doverfelt.pixturation.Pixturation;
@@ -132,29 +132,14 @@ public class Game {
     }
 
     public void start() {
-        final Game out = this;
-        HttpUtils.post("game/" + id + "/start", new HashMap<String, String>(), new Net.HttpResponseListener() {
-            @Override
-            public void handleHttpResponse(Net.HttpResponse httpResponse) {
-                out.active = true;
-                String result = httpResponse.getResultAsString();
-                JsonValue base = Json.parse(result);
-                if (base.isObject()) {
-                    JsonObject game = base.asObject().get("game").asObject();
-                    out.word = game.getString("current_word", "NO_WORD");
-                }
-            }
-
-            @Override
-            public void failed(Throwable t) {
-
-            }
-
-            @Override
-            public void cancelled() {
-
-            }
-        });
+        HttpUtils.SyncHTTPResponse response = HttpUtils.postSync("game/" + id + "/start", new HashMap<String, String>());
+        active = true;
+        JsonValue base = Json.parse(response.getBody());
+        if (base.isObject()) {
+            JsonObject game = base.asObject().get("game").asObject();
+            word = game.getString("current_word", "NO_WORD");
+            currentPlayer = Player.createPlayer(game.get("current_player").asObject());
+        }
     }
 
     public void addPlayer(Player player) {
@@ -163,7 +148,7 @@ public class Game {
         HttpUtils.post("game/" + id + "/players/add", data, new Net.HttpResponseListener() {
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
-
+                Gdx.app.log("addPlayer", httpResponse.getResultAsString());
             }
 
             @Override
@@ -191,7 +176,13 @@ public class Game {
                             JsonObject data = base.asObject().get("game").asObject();
                             game.word = data.getString("word", "NO_WORD");
                             game.state = Game.stateFromNum(data.getInt("status", -1));
-                            
+                            if (data.get("players").isArray()) {
+                                JsonArray players = data.get("players").asArray();
+                                game.players.clear();
+                                for (JsonValue value : players) {
+                                    game.players.add(Player.createPlayer(value.asObject().getInt("id", -1)));
+                                }
+                            }
                         }
                     }
                 }

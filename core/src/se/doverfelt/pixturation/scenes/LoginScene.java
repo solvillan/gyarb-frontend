@@ -1,9 +1,11 @@
 package se.doverfelt.pixturation.scenes;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Net;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.utils.Base64Coder;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
 import se.doverfelt.pixturation.Pixturation;
@@ -84,6 +86,7 @@ public class LoginScene extends AbstractScene {
         if (pixturation.getPreferences().contains("token")) {
             if (handler.checkOldToken(pixturation.getPreferences().getString("token"))) {
                 HttpUtils.setToken(pixturation.getPreferences().getString("token"));
+                Gdx.app.log("Token", Base64Coder.decodeString(HttpUtils.getToken()));
                 handler.authToken();
             }
         }

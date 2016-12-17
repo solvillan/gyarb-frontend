@@ -12,8 +12,7 @@ import com.badlogic.gdx.utils.Align;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
 import se.doverfelt.pixturation.Pixturation;
-import se.doverfelt.pixturation.models.Game;
-import se.doverfelt.pixturation.models.Player;
+import se.doverfelt.pixturation.net.models.Game;
 import se.doverfelt.pixturation.scenes.AbstractScene;
 
 /**
@@ -63,7 +62,7 @@ public class ContinueGameScene extends AbstractScene {
             gamelist.layout();
             gamelist.pack();
             root.layout();
-            //root.pack();
+            root.pack();
             added = true;
         }
         root.setPosition(getStage().getWidth()/2f, getStage().getHeight()/2f, Align.center);

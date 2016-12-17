@@ -6,7 +6,7 @@ import com.badlogic.gdx.net.HttpStatus;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonValue;
 import se.doverfelt.pixturation.Pixturation;
-import se.doverfelt.pixturation.models.Player;
+import se.doverfelt.pixturation.net.models.Player;
 import se.doverfelt.pixturation.scenes.LoginScene;
 import se.doverfelt.pixturation.utils.HttpUtils;
 
