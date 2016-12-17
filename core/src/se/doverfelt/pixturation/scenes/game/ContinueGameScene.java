@@ -71,7 +71,6 @@ public class ContinueGameScene extends AbstractScene {
 
     @LmlAction("goToGame")
     public void goToGame(Actor actor) {
-<<<<<<< Updated upstream
         if (!goBtn.isDisabled()) {
             pixturation.setCurrentGame(gamelist.getSelected());
             if (pixturation.getCurrentGame().getState() == Game.State.DRAW) {
@@ -79,13 +78,6 @@ public class ContinueGameScene extends AbstractScene {
             } else {
                 pixturation.shouldSetScreen("guessGame");
             }
-=======
-        pixturation.setCurrentGame(gamelist.getSelected());
-        if (pixturation.getCurrentGame().getState() == Game.State.DRAW) {
-            pixturation.shouldSetScreen("drawGame");
-        } else {
-            pixturation.shouldSetScreen("guessGame");
->>>>>>> Stashed changes
         }
     }
 
