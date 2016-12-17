@@ -113,7 +113,7 @@ public class Game {
                 throw new HttpUtils.MalformedResponseException();
             }
             final Game out = new Game(game.getInt("id", Integer.MIN_VALUE), State.DRAW);
-            out.currentPlayer = new Player(game.get("current_player").asObject().getString("name", "NO_NAME"), game.get("current_player").asObject().getString("email", "NO_EMAIL"), game.get("current_player").asObject().getInt("id", -1));
+            out.currentPlayer = Player.createPlayer(game.get("current_player").asObject().getLong("id", -1));
             out.players.add(out.currentPlayer);
             HttpUtils.post("game/" + out.id + "/start", new HashMap<String, String>(), new Net.HttpResponseListener() {
                 @Override

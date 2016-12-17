@@ -1,5 +1,6 @@
 package se.doverfelt.pixturation.models;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.utils.Array;
 import com.eclipsesource.json.Json;
@@ -31,7 +32,11 @@ public class Player {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof Player && ((Player) obj).getId() == this.id;
+        if (obj instanceof Player) {
+            return ((Player) obj).getId() == this.id;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -45,6 +50,7 @@ public class Player {
 
     public static Player createPlayer(long id) {
         HttpUtils.SyncHTTPResponse response = HttpUtils.getSync("user/" + id + "/info");
+        Gdx.app.log("Player.createPlayer", response.getBody());
         JsonValue base = Json.parse(response.getBody());
         String name, email;
         int pid;
@@ -52,6 +58,7 @@ public class Player {
             name = base.asObject().getString("name", "NO_NAME");
             email = base.asObject().getString("email", "NO_NAME");
             pid = base.asObject().getInt("id", -1);
+            Gdx.app.log("Player.createPlayer", name + " : " + email + " : " + pid);
         } else {
             return null;
         }
