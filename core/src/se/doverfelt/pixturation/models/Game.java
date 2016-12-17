@@ -115,28 +115,6 @@ public class Game {
             final Game out = new Game(game.getInt("id", Integer.MIN_VALUE), State.DRAW);
             out.currentPlayer = Player.createPlayer(game.get("current_player").asObject().getLong("id", -1));
             out.players.add(out.currentPlayer);
-            HttpUtils.post("game/" + out.id + "/start", new HashMap<String, String>(), new Net.HttpResponseListener() {
-                @Override
-                public void handleHttpResponse(Net.HttpResponse httpResponse) {
-                    out.active = true;
-                    String result = httpResponse.getResultAsString();
-                    JsonValue base = Json.parse(result);
-                    if (base.isObject()) {
-                        JsonObject game = base.asObject().get("game").asObject();
-                        out.word = game.getString("current_word", "NO_WORD");
-                    }
-                }
-
-                @Override
-                public void failed(Throwable t) {
-
-                }
-
-                @Override
-                public void cancelled() {
-
-                }
-            });
             return out;
         } else if (response.getStatus() == HttpStatus.SC_FORBIDDEN) {
             throw new HttpUtils.AccessForbiddenException();
@@ -153,9 +131,82 @@ public class Game {
         return game;
     }
 
-    public static Game getGame(long id) {
-        HttpUtils.SyncHTTPResponse response = HttpUtils.getSync("game/" + id + "/poll");
-        return new Game(id, State.DRAW);
+    public void start() {
+        final Game out = this;
+        HttpUtils.post("game/" + id + "/start", new HashMap<String, String>(), new Net.HttpResponseListener() {
+            @Override
+            public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                out.active = true;
+                String result = httpResponse.getResultAsString();
+                JsonValue base = Json.parse(result);
+                if (base.isObject()) {
+                    JsonObject game = base.asObject().get("game").asObject();
+                    out.word = game.getString("current_word", "NO_WORD");
+                }
+            }
+
+            @Override
+            public void failed(Throwable t) {
+
+            }
+
+            @Override
+            public void cancelled() {
+
+            }
+        });
+    }
+
+    public void addPlayer(Player player) {
+        HashMap<String, String> data = new HashMap<String, String>();
+        data.put("player_id", String.valueOf(player.getId()));
+        HttpUtils.post("game/" + id + "/players/add", data, new Net.HttpResponseListener() {
+            @Override
+            public void handleHttpResponse(Net.HttpResponse httpResponse) {
+
+            }
+
+            @Override
+            public void failed(Throwable t) {
+
+            }
+
+            @Override
+            public void cancelled() {
+
+            }
+        });
+    }
+
+    public void update() {
+        final Game game = this;
+        HttpUtils.get("game/" + id + "/poll", new Net.HttpResponseListener() {
+            @Override
+            public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                String body = httpResponse.getResultAsString();
+                if (httpResponse.getStatus().getStatusCode() == 200) {
+                    JsonValue base = Json.parse(body);
+                    if (base.isObject()) {
+                        if (base.asObject().get("game").isObject()) {
+                            JsonObject data = base.asObject().get("game").asObject();
+                            game.word = data.getString("word", "NO_WORD");
+                            game.state = Game.stateFromNum(data.getInt("status", -1));
+                            
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void failed(Throwable t) {
+
+            }
+
+            @Override
+            public void cancelled() {
+
+            }
+        });
     }
 
     public String getWord() {
@@ -172,7 +223,7 @@ public class Game {
                 return State.DRAW;
             case 2:
                 return State.GUESS;
-            case 255:
+            case 254:
                 return State.WAIT;
             case 0:
                 return State.WAIT_FOR_START;
