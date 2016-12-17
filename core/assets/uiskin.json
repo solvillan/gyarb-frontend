@@ -69,7 +69,7 @@ com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
 	default: {
 		font: font_raleway_24pt,
 		fontColor: { a: 1 },
-		background: grey_panel,
+		background: grey_button05,
 		cursor: grey_sliderVertical,
 		selection: selection
 	}

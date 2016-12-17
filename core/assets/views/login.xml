@@ -5,9 +5,9 @@
     <window id="loginWindow">
         <table onecolumn="true">
             <label>Login</label>
-            <textfield onchange="updateEmail" message="E-mail" />
-            <textfield onchange="updatePass" message="Password" passwordmode="true" passwordchar="*" />
-            <button onclick="login">Login</button>
+            <textfield minwidth="300" onchange="updateEmail" message="E-mail" />
+            <textfield growx="true" onchange="updatePass" message="Password" passwordmode="true" passwordchar="*" />
+            <button growx="true" onclick="login">Login</button>
         </table>
     </window>
     <dialog visible="false" id="errorDialog" alpha="1">

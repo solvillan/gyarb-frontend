@@ -4,10 +4,10 @@
     <:log>Init menu window</:log>
     <window movable="false">
         <table onecolumn="true">
-            <button onclick="continueGame">Continue Game</button>
-            <button onclick="goToCreateGame">Create new Game</button>
-            <button onclick="showProfile">Profile</button>
-            <button onclick="quit">Quit</button>
+            <button growx="true" onclick="continueGame">Continue Game</button>
+            <button growx="true" onclick="goToCreateGame">Create new Game</button>
+            <button growx="true" onclick="showProfile">Profile</button>
+            <button growx="true" onclick="quit">Quit</button>
         </table>
     </window>
 </:noop>
