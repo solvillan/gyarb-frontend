@@ -84,6 +84,8 @@ public class LoginHandler implements Net.HttpResponseListener {
                 Gdx.app.log("Check", httpResponse.getStatus().getStatusCode() +  ": " + response);
                 if (httpResponse.getStatus().getStatusCode() == HttpStatus.SC_OK) {
                     tokenValid = true;
+                } else if (httpResponse.getStatus().getStatusCode() == 498) {
+                    
                 }
                 tokenChecked = true;
             }
