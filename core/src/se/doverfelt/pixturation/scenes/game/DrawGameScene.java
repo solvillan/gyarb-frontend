@@ -18,7 +18,7 @@ public class DrawGameScene extends AbstractScene {
     private ColorPicker colorPicker;
     private ColorGrid grid;
     private Batch batch;
-    private Button back, submit;
+    private Button back, submit, clear;
     private Label word, title;
     private Pixturation pixturation;
 
@@ -59,6 +59,13 @@ public class DrawGameScene extends AbstractScene {
                 }
             }
         });
+        clear = new Button(submit.getX(), 60, space + 10, 40, "Clear", this, pixturation);
+        clear.setAction(new Button.Action() {
+            @Override
+            public void onClick() {
+                grid.clear();
+            }
+        });
         title = new Label(10, Gdx.graphics.getHeight() - 10, this, pixturation, "Draw the word", 32);
         batch = new SpriteBatch();
     }
@@ -76,6 +83,7 @@ public class DrawGameScene extends AbstractScene {
         submit.act(delta);
         word.act(delta);
         title.act(delta);
+        clear.act(delta);
         word.setText((pixturation.getCurrentGame() != null ? pixturation.getCurrentGame().getWord() : "No Game Active"));
         if (pixturation.getCurrentGame() != null) {
             if (!pixturation.getCurrentGame().getCurrentPlayer().equals(Pixturation.getCurrentPlayer())) {
@@ -93,5 +101,6 @@ public class DrawGameScene extends AbstractScene {
         submit.draw(this.batch);
         word.draw(this.batch);
         title.draw(this.batch);
+        clear.draw(batch);
     }
 }

@@ -32,12 +32,7 @@ public class ColorGrid extends Component {
         if (tiles != null) {
             this.tiles = tiles;
         } else {
-            this.tiles = new Color[32][32];
-            for (int x = 0; x < 32; x++) {
-                for (int y = 0; y < 32; y++) {
-                    this.tiles[x][y] = Color.WHITE;
-                }
-            }
+            clear();
         }
         shapes = new ShapeRenderer();
     }
@@ -140,5 +135,14 @@ public class ColorGrid extends Component {
 
     public void setPicture(Color[][] picture) {
         this.tiles = picture;
+    }
+
+    public void clear() {
+        this.tiles = new Color[32][32];
+        for (int x = 0; x < 32; x++) {
+            for (int y = 0; y < 32; y++) {
+                this.tiles[x][y] = Color.WHITE;
+            }
+        }
     }
 }

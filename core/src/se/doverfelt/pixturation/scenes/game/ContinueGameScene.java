@@ -78,7 +78,6 @@ public class ContinueGameScene extends AbstractScene {
     public void goToGame(Actor actor) {
         if (!goBtn.isDisabled()) {
             pixturation.setCurrentGame(gamelist.getSelected());
-            pixturation.getCurrentGame().update();
             if (pixturation.getCurrentGame().getState() == Game.State.DRAW) {
                 pixturation.shouldSetScreen("drawGame");
             } else {
@@ -89,6 +88,7 @@ public class ContinueGameScene extends AbstractScene {
 
     @LmlAction("previewGame")
     public void previewGame(Actor actor) {
+        gamelist.getSelected().update();
         Game sel = gamelist.getSelected();
         gameName.setText(sel.toString() + " | State: " + sel.getState());
         gamePlayers.setItems(sel.getPlayers());

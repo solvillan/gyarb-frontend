@@ -93,7 +93,7 @@ public class Game {
     }
 
     public boolean canMakeMove() {
-        return (state == State.DRAW || state == State.GUESS) && !(state == State.DRAW && currentPlayer != Pixturation.getCurrentPlayer());
+        return (state == State.DRAW || state == State.GUESS) && !(state == State.DRAW && !currentPlayer.equals(Pixturation.getCurrentPlayer()));
     }
 
     public static Game createGame() throws HttpUtils.MalformedResponseException, HttpUtils.AccessForbiddenException, HttpUtils.WrongHTTPStatusException {
@@ -164,48 +164,32 @@ public class Game {
     }
 
     public void update() {
-        final Game game = this;
-        HttpUtils.get("game/" + id + "/poll", new Net.HttpResponseListener() {
-            @Override
-            public void handleHttpResponse(Net.HttpResponse httpResponse) {
-                String body = httpResponse.getResultAsString();
-                if (httpResponse.getStatus().getStatusCode() == 200) {
-                    JsonValue base = Json.parse(body);
-                    if (base.isObject()) {
-                        if (base.asObject().get("game").isObject()) {
-                            JsonObject data = base.asObject().get("game").asObject();
-                            game.word = data.getString("word", "NO_WORD");
-                            game.state = Game.stateFromNum(data.getInt("status", -1));
-                            //game.currentPlayer = Player.createPlayer(data.getLong("current_player", -1));
-                            JsonObject picture = data.get("current_picture").asObject();
-                            try {
-                                game.picture = ColorGrid.parseJson(CompressionUtils.fromGzBase64(picture.getString("data", "")));
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            if (data.get("players").isArray()) {
-                                JsonArray players = data.get("players").asArray();
-                                game.players.clear();
-                                for (JsonValue value : players) {
-                                    game.players.add(Player.createPlayer(value.asObject().getLong("id", -1)));
-                                }
-                            }
-
+        HttpUtils.SyncHTTPResponse httpResponse = HttpUtils.getSync("game/" + id + "/poll");
+        if (httpResponse.getStatus() == 200) {
+            JsonValue base = Json.parse(httpResponse.getBody());
+            if (base.isObject()) {
+                if (base.asObject().get("game").isObject()) {
+                    JsonObject data = base.asObject().get("game").asObject();
+                    word = data.getString("current_word", "NO_WORD");
+                    state = Game.stateFromNum(data.getInt("status", -1));
+                    currentPlayer = Player.createPlayer(data.getLong("current_player", -1));
+                    JsonObject picture = data.get("current_picture").asObject();
+                    try {
+                        this.picture = ColorGrid.parseJson(CompressionUtils.fromGzBase64(picture.getString("data", "")));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    if (data.get("players").isArray()) {
+                        JsonArray players = data.get("players").asArray();
+                        this.players.clear();
+                        for (JsonValue value : players) {
+                            this.players.add(Player.createPlayer(value.asObject().getLong("id", -1)));
                         }
                     }
+
                 }
             }
-
-            @Override
-            public void failed(Throwable t) {
-
-            }
-
-            @Override
-            public void cancelled() {
-
-            }
-        });
+        }
     }
 
     public String getWord() {
