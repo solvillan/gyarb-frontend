@@ -4,8 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.net.HttpRequestBuilder;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.HashMap;
 
 /**
@@ -17,12 +15,12 @@ public class HttpUtils {
     private static final String BASE_URL = "http://localhost/";
     private static String token;
 
-    public static SyncHTTPResponse getSync(String path) {
+    public static SyncHTTPResponse getSync(final String path) {
         final int[] status = {0};
         final String[] responseBody = new String[1];
         final boolean[] done = {false};
         responseBody[0] = "";
-        get(path, new Net.HttpResponseListener() {
+        Net.HttpRequest request = get(path, new Net.HttpResponseListener() {
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
                 status[0] = httpResponse.getStatus().getStatusCode();
@@ -33,37 +31,49 @@ public class HttpUtils {
             @Override
             public void failed(Throwable t) {
                 status[0] = -1;
-                Gdx.app.error("PostSync", t.getMessage(), t);
+                Gdx.app.error("GetSync - " + path, t.getMessage(), t);
                 done[0] = true;
             }
 
             @Override
             public void cancelled() {
                 status[0] = -2;
-                Gdx.app.error("PostSync", "Cancelled!");
+                Gdx.app.error("GetSync - " + path, "Cancelled!");
                 done[0] = true;
             }
         });
+        long count = 0;
         while (!done[0]) {
-            Thread.yield();
+            count++;
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (count >= 15) {
+                Gdx.net.cancelHttpRequest(request);
+            }
         }
+        done[0] = false;
         return new SyncHTTPResponse(responseBody[0], status[0]);
     }
 
-    public static void get(String path, Net.HttpResponseListener listener) {
+    public static Net.HttpRequest get(String path, Net.HttpResponseListener listener) {
         HashMap<String, String> headers = new HashMap<String, String>();
         if (token != null) {
             headers.put("Token", token);
         }
-        get(path, listener, headers);
+        return get(path, listener, headers);
     }
 
-    public static void get(String path, Net.HttpResponseListener listener, HashMap<String, String> headers) {
+    public static Net.HttpRequest get(String path, Net.HttpResponseListener listener, HashMap<String, String> headers) {
         HttpRequestBuilder request = builder.newRequest().method(Net.HttpMethods.GET).url(BASE_URL + path.trim());
         for (String k : headers.keySet()) {
             request = request.header(k, headers.get(k));
         }
-        Gdx.net.sendHttpRequest(request.build(), listener);
+        Net.HttpRequest packet = request.build();
+        Gdx.net.sendHttpRequest(packet, listener);
+        return packet;
     }
 
     public static void setToken(String newToken) {
