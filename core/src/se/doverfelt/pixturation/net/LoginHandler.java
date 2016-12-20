@@ -40,7 +40,7 @@ public class LoginHandler implements Net.HttpResponseListener {
         } else {
             JsonValue data = Json.parse(response);
             if (data.isObject()) {
-                ((LoginScene) pixturation.getScreen("login")).error(data.asObject().getString("error", "Error logging in!"));
+                ((LoginScene) Pixturation.getScreen("login")).error(data.asObject().getString("error", "Error logging in!"));
             }
         }
     }
@@ -109,10 +109,12 @@ public class LoginHandler implements Net.HttpResponseListener {
     @Override
     public void failed(Throwable t) {
         Gdx.app.error("Auth", t.getMessage());
+        ((LoginScene) Pixturation.getScreen("login")).error(t.getMessage());
     }
 
     @Override
     public void cancelled() {
         Gdx.app.error("Auth", "Request cancelled!");
+        ((LoginScene) pixturation.getScreen("login")).error("Request cancelled!");
     }
 }

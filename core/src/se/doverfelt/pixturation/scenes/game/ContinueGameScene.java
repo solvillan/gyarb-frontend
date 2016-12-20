@@ -68,10 +68,17 @@ public class ContinueGameScene extends AbstractScene {
         root.setPosition(getStage().getWidth()/2f, getStage().getHeight()/2f, Align.center);
     }
 
+    @Override
+    public void show() {
+        super.show();
+        added = false;
+    }
+
     @LmlAction("goToGame")
     public void goToGame(Actor actor) {
         if (!goBtn.isDisabled()) {
             pixturation.setCurrentGame(gamelist.getSelected());
+            pixturation.getCurrentGame().update();
             if (pixturation.getCurrentGame().getState() == Game.State.DRAW) {
                 pixturation.shouldSetScreen("drawGame");
             } else {

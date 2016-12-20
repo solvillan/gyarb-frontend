@@ -17,7 +17,7 @@
                 <window movable="false">
                     <table onecolumn="true">
                         <label>Players</label>
-                        <textfield onchange="getPlayers" message="Search" />
+                        <textfield id="search" onchange="getPlayers" message="Search" />
                         <scrollpane>
                             <list id="players">
                             </list>

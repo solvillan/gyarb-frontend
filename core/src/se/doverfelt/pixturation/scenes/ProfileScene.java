@@ -34,6 +34,9 @@ public class ProfileScene extends AbstractScene {
     @LmlActor("profileRoot")
     private Window window;
 
+    @LmlActor("search")
+    private TextField textField;
+
     private ColorGrid grid;
     private boolean added;
 
@@ -51,6 +54,7 @@ public class ProfileScene extends AbstractScene {
 
     @Override
     public void show() {
+        added = false;
         super.show();
         HttpUtils.get("/user/list/friends", new Net.HttpResponseListener() {
             @Override
@@ -88,7 +92,7 @@ public class ProfileScene extends AbstractScene {
 
     @LmlAction("getName")
     public String getName() {
-        return pixturation.getCurrentPlayer().getName();
+        return (Pixturation.getCurrentPlayer() != null ? Pixturation.getCurrentPlayer().getName() : "");
     }
 
     @LmlAction("getPlayers")
@@ -145,6 +149,9 @@ public class ProfileScene extends AbstractScene {
 
     @Override
     public void update(float delta) {
-
+        if (!added && textField != null) {
+            getPlayers(textField);
+            added = true;
+        }
     }
 }

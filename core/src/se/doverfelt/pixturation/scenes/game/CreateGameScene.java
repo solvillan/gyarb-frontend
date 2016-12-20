@@ -93,6 +93,12 @@ public class CreateGameScene extends AbstractScene {
         root.setPosition(getStage().getWidth()/2f, getStage().getHeight()/2f, Align.center);
     }
 
+    @Override
+    public void show() {
+        super.show();
+        added = false;
+    }
+
     @LmlAction("playerSelected")
     public void playerSelected(Actor actor) {
         addBtn.setDisabled(gamePlayers.getItems().contains(allPlayers.getSelected(), false));

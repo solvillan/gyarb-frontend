@@ -20,6 +20,7 @@ public class GuessGameScene extends AbstractScene {
     private TextField textField;
     private Label title;
     private SpriteBatch batch;
+    private boolean pictureSet;
 
     /**
      * @param stage will be filled with actors when the view is passed to a LML parser. Should not be null.
@@ -38,7 +39,7 @@ public class GuessGameScene extends AbstractScene {
                 grid.setCurrentColor(color);
             }
         });
-        grid = new ColorGrid(true, null, 10 + colorPicker.getWidth(), 10, this);
+        grid = new ColorGrid(false, null, 10 + colorPicker.getWidth(), 10, this);
         float space = Gdx.graphics.getWidth() - colorPicker.getWidth() - grid.getWidth() - 40;
         back = new Button(Gdx.graphics.getWidth() - space/3f - 10, 10, space/3f, 40, "Back", this, pixturation);
         back.setAction(new Button.Action() {
@@ -68,6 +69,12 @@ public class GuessGameScene extends AbstractScene {
     }
 
     @Override
+    public void show() {
+        super.show();
+        pictureSet = false;
+    }
+
+    @Override
     public void update(float delta) {
         submit.act(delta);
         back.act(delta);
@@ -75,6 +82,12 @@ public class GuessGameScene extends AbstractScene {
         textField.act(delta);
         grid.act(delta);
         colorPicker.act(delta);
+        if (!pictureSet && pixturation.getCurrentGame() != null) {
+            if (pixturation.getCurrentGame().getPicture() != null) {
+                grid.setPicture(pixturation.getCurrentGame().getPicture());
+                pictureSet = true;
+            }
+        }
     }
 
     @Override

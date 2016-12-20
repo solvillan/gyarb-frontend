@@ -137,4 +137,8 @@ public class ColorGrid extends Component {
 
         return colors;
     }
+
+    public void setPicture(Color[][] picture) {
+        this.tiles = picture;
+    }
 }

@@ -176,6 +176,12 @@ public class Game {
                             JsonObject data = base.asObject().get("game").asObject();
                             game.word = data.getString("word", "NO_WORD");
                             game.state = Game.stateFromNum(data.getInt("status", -1));
+                            JsonObject picture = data.get("current_picture").asObject();
+                            try {
+                                game.picture = ColorGrid.parseJson(CompressionUtils.fromGzBase64(picture.getString("data", "")));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                             if (data.get("players").isArray()) {
                                 JsonArray players = data.get("players").asArray();
                                 game.players.clear();
@@ -183,6 +189,7 @@ public class Game {
                                     game.players.add(Player.createPlayer(value.asObject().getInt("id", -1)));
                                 }
                             }
+
                         }
                     }
                 }
@@ -239,6 +246,10 @@ public class Game {
 
     public State getState() {
         return state;
+    }
+
+    public Color[][] getPicture() {
+        return picture;
     }
 
     public enum State {

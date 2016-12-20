@@ -96,7 +96,7 @@ public class LoadingScene extends AbstractScene {
 
     @Override
     public void hide() {
-        getStage().dispose();
+
     }
 
     @Override

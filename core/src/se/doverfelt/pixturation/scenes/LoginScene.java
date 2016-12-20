@@ -99,7 +99,7 @@ public class LoginScene extends AbstractScene {
 
     @Override
     public void hide() {
-        getStage().dispose();
+
     }
 
     public void error(String msg) {

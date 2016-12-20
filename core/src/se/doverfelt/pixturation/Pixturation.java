@@ -193,12 +193,12 @@ public class Pixturation extends LmlApplicationListener {
     public void setScreen(String screen) {
         if (currentScreen != null) {
             currentScreen.hide();
-            currentScreen.clear();
         }
         currentScreen = screens.get(screen);
         currentScreen.show();
-        initiateView(currentScreen);
-        setCurrentView(currentScreen);
+        if (!getViews().containsKey(currentScreen.getClass())) initiateView(currentScreen);
+        setView(currentScreen);
+        Gdx.input.setInputProcessor(currentScreen.getStage());
     }
 
     public void shouldSetScreen(String screen) {
