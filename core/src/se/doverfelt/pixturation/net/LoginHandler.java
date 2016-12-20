@@ -20,6 +20,8 @@ public class LoginHandler implements Net.HttpResponseListener {
     private final Pixturation pixturation;
     private boolean tokenValid = false;
     private boolean tokenChecked = false;
+    private TokenRefresher tokenRefresher = new TokenRefresher();
+    private Thread tokenRefresherT = new Thread(tokenRefresher);
 
     public LoginHandler(Pixturation pixturation) {
         this.pixturation = pixturation;
@@ -37,17 +39,19 @@ public class LoginHandler implements Net.HttpResponseListener {
                 pixturation.getPreferences().flush();
             }
             authToken();
+            tokenRefresherT.start();
         } else {
             JsonValue data = Json.parse(response);
             if (data.isObject()) {
                 ((LoginScene) Pixturation.getScreen("login")).error(data.asObject().getString("error", "Error logging in!"));
             }
         }
+
     }
 
     public void authToken() {
         HashMap<String, String> param = new HashMap<String, String>();
-        HttpUtils.post("user/check-token", param, new Net.HttpResponseListener() {
+        HttpUtils.post("user/token/check", param, new Net.HttpResponseListener() {
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
                 String response = httpResponse.getResultAsString();
@@ -77,15 +81,14 @@ public class LoginHandler implements Net.HttpResponseListener {
         HashMap<String, String> param = new HashMap<String, String>();
         HashMap<String, String> headers = new HashMap<String, String>();
         headers.put("Token", token);
-        HttpUtils.post("user/check-token", param, new Net.HttpResponseListener() {
+        HttpUtils.post("user/token/check", param, new Net.HttpResponseListener() {
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
                 String response = httpResponse.getResultAsString();
                 Gdx.app.log("Check", httpResponse.getStatus().getStatusCode() +  ": " + response);
                 if (httpResponse.getStatus().getStatusCode() == HttpStatus.SC_OK) {
                     tokenValid = true;
-                } else if (httpResponse.getStatus().getStatusCode() == 498) {
-                    
+                    tokenRefresherT.start();
                 }
                 tokenChecked = true;
             }
