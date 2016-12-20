@@ -42,7 +42,7 @@ public class HttpUtils {
                 done[0] = true;
             }
         });
-        long count = 0;
+        byte count = 0;
         while (!done[0]) {
             count++;
             try {
@@ -85,12 +85,12 @@ public class HttpUtils {
         return token;
     }
 
-    public static void post(String path, HashMap<String, String> data, Net.HttpResponseListener listener) {
+    public static Net.HttpRequest post(String path, HashMap<String, String> data, Net.HttpResponseListener listener) {
         HashMap<String, String> headers = new HashMap<String, String>();
         if (token != null) {
             headers.put("Token", token);
         }
-        post(path, data, listener, headers);
+        return post(path, data, listener, headers);
     }
 
     public static SyncHTTPResponse postSync(String path, HashMap<String, String> data) {
@@ -98,7 +98,7 @@ public class HttpUtils {
         final String[] responseBody = new String[1];
         final boolean[] done = {false};
         responseBody[0] = "";
-        post(path, data, new Net.HttpResponseListener() {
+        Net.HttpRequest request = post(path, data, new Net.HttpResponseListener() {
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
                 status[0] = httpResponse.getStatus().getStatusCode();
@@ -120,19 +120,31 @@ public class HttpUtils {
                 done[0] = true;
             }
         });
+        byte count = 0;
         while (!done[0]) {
-            Thread.yield();
+            count++;
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (count >= 15) {
+                Gdx.net.cancelHttpRequest(request);
+            }
         }
+        done[0] = false;
         return new SyncHTTPResponse(responseBody[0], status[0]);
     }
 
-    public static void post(String path, HashMap<String, String> data, Net.HttpResponseListener listener, HashMap<String, String> headers) {
+    public static Net.HttpRequest post(String path, HashMap<String, String> data, Net.HttpResponseListener listener, HashMap<String, String> headers) {
         HttpRequestBuilder request = builder.newRequest().method(Net.HttpMethods.POST).url(BASE_URL + path);
         for (String k : headers.keySet()) {
             request = request.header(k, headers.get(k));
         }
         request.formEncodedContent(data);
-        Gdx.net.sendHttpRequest(request.build(), listener);
+        Net.HttpRequest packet = request.build();
+        Gdx.net.sendHttpRequest(packet, listener);
+        return packet;
     }
 
     public static class SyncHTTPResponse {

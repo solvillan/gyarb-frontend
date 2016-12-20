@@ -176,7 +176,7 @@ public class Game {
                             JsonObject data = base.asObject().get("game").asObject();
                             game.word = data.getString("word", "NO_WORD");
                             game.state = Game.stateFromNum(data.getInt("status", -1));
-                            game.currentPlayer = Player.createPlayer(data.getLong("current_player", -1));
+                            //game.currentPlayer = Player.createPlayer(data.getLong("current_player", -1));
                             JsonObject picture = data.get("current_picture").asObject();
                             try {
                                 game.picture = ColorGrid.parseJson(CompressionUtils.fromGzBase64(picture.getString("data", "")));
@@ -187,7 +187,7 @@ public class Game {
                                 JsonArray players = data.get("players").asArray();
                                 game.players.clear();
                                 for (JsonValue value : players) {
-                                    game.players.add(Player.createPlayer(value.asObject().getInt("id", -1)));
+                                    game.players.add(Player.createPlayer(value.asObject().getLong("id", -1)));
                                 }
                             }
 
