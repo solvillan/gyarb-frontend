@@ -68,10 +68,11 @@ public class Game {
         });
     }
 
-    public void submitGuess(String guess) {
+    public void submitGuess(String guess, float time) {
         HashMap<String, String> data = new HashMap<String, String>();
         JsonObject wrapper = new JsonObject();
         wrapper.add("guess", guess);
+        wrapper.add("time", time);
         Gdx.app.log("SubmitGuess", wrapper.toString());
         data.put("payload", wrapper.toString());
         HttpUtils.post("game/" + this.id + "/submit/guess", data, new Net.HttpResponseListener() {

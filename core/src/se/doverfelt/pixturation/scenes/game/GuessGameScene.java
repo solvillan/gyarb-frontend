@@ -21,6 +21,7 @@ public class GuessGameScene extends AbstractScene {
     private Label title;
     private SpriteBatch batch;
     private boolean pictureSet;
+    private long timestamp;
 
     /**
      * @param stage will be filled with actors when the view is passed to a LML parser. Should not be null.
@@ -53,7 +54,7 @@ public class GuessGameScene extends AbstractScene {
             @Override
             public void onClick() {
                 if (pixturation.getCurrentGame() != null) {
-                    pixturation.getCurrentGame().submitGuess(textField.getText());
+                    pixturation.getCurrentGame().submitGuess(textField.getText(), (System.currentTimeMillis() - timestamp)/1000f);
                     pixturation.shouldSetScreen("menu");
                 }
             }
@@ -85,6 +86,7 @@ public class GuessGameScene extends AbstractScene {
         if (!pictureSet && pixturation.getCurrentGame() != null) {
             if (pixturation.getCurrentGame().getPicture() != null) {
                 grid.setPicture(pixturation.getCurrentGame().getPicture());
+                timestamp = System.currentTimeMillis();
                 pictureSet = true;
             }
         }
