@@ -30,6 +30,7 @@ public class Game {
     private Player currentPlayer;
     private Array<Player> players;
     private String word;
+    private boolean hasMove;
 
     private Game(long id, State state) {
         this.id = id;
@@ -93,7 +94,7 @@ public class Game {
     }
 
     public boolean canMakeMove() {
-        return (state == State.DRAW || state == State.GUESS) && !(state == State.DRAW && !currentPlayer.equals(Pixturation.getCurrentPlayer()));
+        return hasMove;
     }
 
     public static Game createGame() throws HttpUtils.MalformedResponseException, HttpUtils.AccessForbiddenException, HttpUtils.WrongHTTPStatusException {
@@ -140,6 +141,7 @@ public class Game {
             word = game.getString("current_word", "NO_WORD");
             currentPlayer = Player.createPlayer(game.get("current_player").asObject());
         }
+        update();
     }
 
     public void addPlayer(Player player) {
@@ -172,12 +174,14 @@ public class Game {
                     JsonObject data = base.asObject().get("game").asObject();
                     word = data.getString("current_word", "NO_WORD");
                     state = Game.stateFromNum(data.getInt("status", -1));
-                    currentPlayer = Player.createPlayer(data.getLong("current_player", -1));
-                    JsonObject picture = data.get("current_picture").asObject();
-                    try {
-                        this.picture = ColorGrid.parseJson(CompressionUtils.fromGzBase64(picture.getString("data", "")));
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    currentPlayer = Player.createPlayer(data.get("current_player").asObject());
+                    if (data.get("current_picture").isObject()) {
+                        JsonObject picture = data.get("current_picture").asObject();
+                        try {
+                            this.picture = ColorGrid.parseJson(CompressionUtils.fromGzBase64(picture.getString("data", "")));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                     if (data.get("players").isArray()) {
                         JsonArray players = data.get("players").asArray();
@@ -186,8 +190,8 @@ public class Game {
                             this.players.add(Player.createPlayer(value.asObject().getLong("id", -1)));
                         }
                     }
-
                 }
+                hasMove = base.asObject().getBoolean("has_move", false);
             }
         }
     }
