@@ -35,6 +35,7 @@ public class LoginScene extends AbstractScene {
     private Label errorMsg;
 
     private LoginHandler handler;
+    private boolean added;
 
     /**
      * @param stage will be filled with actors when the view is passed to a LML parser. Should not be null.
@@ -81,6 +82,10 @@ public class LoginScene extends AbstractScene {
 
     @Override
     public void update(float delta) {
+        if (pixturation.getPreferences().contains("email") && !added && emailField != null) {
+            emailField.setText(pixturation.getPreferences().getString("email"));
+            added = true;
+        }
     }
 
     @Override
@@ -92,9 +97,6 @@ public class LoginScene extends AbstractScene {
                 Gdx.app.log("Token", Base64Coder.decodeString(HttpUtils.getToken()));
                 handler.authToken();
             }
-        }
-        if (pixturation.getPreferences().contains("email")) {
-            emailField.setText(pixturation.getPreferences().getString("email"));
         }
     }
 

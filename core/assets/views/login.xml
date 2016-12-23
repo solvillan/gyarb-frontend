@@ -5,7 +5,7 @@
     <window id="loginWindow">
         <table onecolumn="true">
             <label>Login</label>
-            <textfield minwidth="300" onchange="updateEmail" message="E-mail" />
+            <textfield minwidth="300" onchange="updateEmail" message="E-mail" id="email"/>
             <textfield growx="true" onchange="updatePass" message="Password" passwordmode="true" passwordchar="*" />
             <button growx="true" onclick="login">Login</button>
         </table>
