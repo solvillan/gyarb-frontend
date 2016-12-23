@@ -3,9 +3,12 @@ buildscript {
         mavenLocal()
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://mini2dx.org/maven/content/repositories/thirdparty" }
+        maven { url "https://mini2dx.org/maven/content/repositories/releases" }
         jcenter()
     }
     dependencies {
+        classpath group: 'org.mini2Dx', name: 'parcl', version: '1.0.7'
     }
 }
 
@@ -28,12 +31,36 @@ allprojects {
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        maven { url "https://mini2dx.org/maven/content/repositories/thirdparty" }
+        maven { url "https://mini2dx.org/maven/content/repositories/releases" }
     }
 }
 
 project(":desktop") {
     apply plugin: "java"
+    apply plugin: "application"
+    apply plugin: "org.mini2Dx.parcl"
 
+    mainClassName = "se.doverfelt.pixturation.desktop.DesktopLauncher"
+
+    parcl {
+        exe {
+            exeName = "Pixturation-1.0"
+        }
+
+        app {
+            appName = "Pixturation-1.0"
+            icon = "core/assets/icons/app.icns"
+            applicationCategory = "public.app-category.adventure-games"
+            displayName = 'Pixturation'
+            identifier = 'se.doverfelt.pixturation'
+            copyright = 'Copyright 2016 Rickard Doverfelt'
+        }
+
+        linux {
+            binName = "Pixturation-1.0"
+        }
+    }
 
     dependencies {
         compile project(":core")

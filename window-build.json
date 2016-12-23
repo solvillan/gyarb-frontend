@@ -1,0 +1,17 @@
+{
+  "platform": "windows64",
+  "jdk": "C:\\Users\\Rickard\\Downloads\\java-1.8.0-openjdk-1.8.0.111-3.b15.ojdkbuild.windows.x86_64.zip",
+  "executable": "Pixturation-1.0",
+  "classpath": [
+    "desktop/build/libs/desktop-1.0.jar"
+  ],
+  "mainclass": "se.doverfelt.pixturation.desktop.DesktopLauncher",
+  "vmargs": [
+    "Xmx1G"
+  ],
+  "resources": [
+    "core/assets"
+  ],
+  "minimizejre": "soft",
+  "output": "out-win"
+}
