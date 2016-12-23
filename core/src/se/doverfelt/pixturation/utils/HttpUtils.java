@@ -12,7 +12,7 @@ import java.util.HashMap;
 public class HttpUtils {
 
     private static HttpRequestBuilder builder = new HttpRequestBuilder();
-    private static final String BASE_URL = "http://localhost/";
+    private static final String BASE_URL = "http://pixturation.doverfelt.se/";
     private static String token;
 
     public static SyncHTTPResponse getSync(final String path) {
