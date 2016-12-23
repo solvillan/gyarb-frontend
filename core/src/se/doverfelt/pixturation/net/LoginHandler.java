@@ -50,7 +50,7 @@ public class LoginHandler implements Net.HttpResponseListener {
     }
 
     public void authToken() {
-        HashMap<String, String> param = new HashMap<String, String>();
+        final HashMap<String, String> param = new HashMap<String, String>();
         HttpUtils.post("user/token/check", param, new Net.HttpResponseListener() {
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
@@ -60,6 +60,8 @@ public class LoginHandler implements Net.HttpResponseListener {
                     JsonValue data = Json.parse(response);
                     if (data.isObject()) {
                         pixturation.setCurrentPlayer(new Player(data.asObject().getString("name", "NO_NAME"), data.asObject().getString("email", "NO_EMAIL"), data.asObject().getInt("id", -1)));
+                        pixturation.getPreferences().putString("email", Pixturation.getCurrentPlayer().getEmail());
+                        pixturation.getPreferences().flush();
                         Pixturation.shouldSetScreen("menu");
                     }
                 }

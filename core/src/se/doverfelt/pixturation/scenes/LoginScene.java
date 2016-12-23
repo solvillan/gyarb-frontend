@@ -22,6 +22,9 @@ public class LoginScene extends AbstractScene {
     private String email = "", pass = "";
     private Pixturation pixturation;
 
+    @LmlActor("email")
+    private TextField emailField;
+
     @LmlActor("loginWindow")
     private Window window;
 
@@ -89,6 +92,9 @@ public class LoginScene extends AbstractScene {
                 Gdx.app.log("Token", Base64Coder.decodeString(HttpUtils.getToken()));
                 handler.authToken();
             }
+        }
+        if (pixturation.getPreferences().contains("email")) {
+            emailField.setText(pixturation.getPreferences().getString("email"));
         }
     }
 
