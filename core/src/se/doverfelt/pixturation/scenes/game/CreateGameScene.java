@@ -56,7 +56,7 @@ public class CreateGameScene extends AbstractScene {
     public void createGame(Actor actor) {
         try {
             pixturation.setCurrentGame(Game.createGame());
-            pixturation.shouldSetScreen("menu");
+            Pixturation.shouldSetScreen("menu");
         } catch (HttpUtils.HTTPException e) {
             e.printStackTrace();
         }
@@ -117,18 +117,18 @@ public class CreateGameScene extends AbstractScene {
     public void goToGame(Actor actor) {
         createdGame.start();
         pixturation.setCurrentGame(createdGame);
-        if (pixturation.getCurrentGame().getState() == Game.State.DRAW) {
-            pixturation.shouldSetScreen("drawGame");
-        } else if (pixturation.getCurrentGame().getState() == Game.State.GUESS) {
-            pixturation.shouldSetScreen("guessGame");
+        if (pixturation.getCurrentGame().getState() == Game.State.DRAW && pixturation.getCurrentGame().canMakeMove()) {
+            Pixturation.shouldSetScreen("drawGame");
+        } else if (pixturation.getCurrentGame().getState() == Game.State.GUESS && pixturation.getCurrentGame().canMakeMove()) {
+            Pixturation.shouldSetScreen("guessGame");
         } else {
-            pixturation.shouldSetScreen("continueGame");
+            Pixturation.shouldSetScreen("continueGame");
         }
     }
 
     @LmlAction("back")
     public void back(Actor actor) {
-        pixturation.shouldSetScreen("menu");
+        Pixturation.shouldSetScreen("menu");
         added = false;
     }
 }

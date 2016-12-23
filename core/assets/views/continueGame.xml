@@ -2,13 +2,13 @@
 <!DOCTYPE :noop SYSTEM "../lml.dtd">
 <:noop>
     <:log>Init continue game window</:log>
-    <window growx="true" growy="true" id="continueRoot" movable="false">
+    <window growx="true" growy="true" id="continueRoot" movable="false" fillparent="true">
             <:row>
                 <label>Games</label>
                 <label id="gameName"></label>
             </:row>
             <:row>
-                <scrollpane grow="true"><list growx="true" growy="true" align="center" id="gamelist" onclick="previewGame"></list></scrollpane>
+                <scrollpane grow="true"><list growx="true" fillx="true" growy="true" align="center" id="gamelist" onclick="previewGame"></list></scrollpane>
                 <list minwidth="500" growx="true" growy="true" id="gamePlayers"></list>
             </:row>
             <:row>

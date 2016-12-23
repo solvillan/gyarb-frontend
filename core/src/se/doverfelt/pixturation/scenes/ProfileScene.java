@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.net.HttpStatus;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
@@ -93,6 +94,11 @@ public class ProfileScene extends AbstractScene {
     @LmlAction("getName")
     public String getName() {
         return (Pixturation.getCurrentPlayer() != null ? Pixturation.getCurrentPlayer().getName() : "");
+    }
+
+    @LmlAction("back")
+    public void back(Actor actor) {
+        Pixturation.shouldSetScreen("menu");
     }
 
     @LmlAction("getPlayers")

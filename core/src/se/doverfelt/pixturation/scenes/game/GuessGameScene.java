@@ -46,7 +46,7 @@ public class GuessGameScene extends AbstractScene {
         back.setAction(new Button.Action() {
             @Override
             public void onClick() {
-                pixturation.shouldSetScreen("menu");
+                Pixturation.shouldSetScreen("menu");
             }
         });
         submit = new Button(back.getX() - 2*(space/3f) - 10, 10, 2*(space/3f), 40, "Submit", this, pixturation);
@@ -55,7 +55,9 @@ public class GuessGameScene extends AbstractScene {
             public void onClick() {
                 if (pixturation.getCurrentGame() != null) {
                     pixturation.getCurrentGame().submitGuess(textField.getText(), (System.currentTimeMillis() - timestamp)/1000f);
-                    pixturation.shouldSetScreen("menu");
+                    //pixturation.shouldSetScreen("guess_score");
+                    title.setText("Submitting...");
+                    submit.setActive(false);
                 }
             }
         });
@@ -73,6 +75,7 @@ public class GuessGameScene extends AbstractScene {
     public void show() {
         super.show();
         pictureSet = false;
+        title.setText("Guess the word");
     }
 
     @Override

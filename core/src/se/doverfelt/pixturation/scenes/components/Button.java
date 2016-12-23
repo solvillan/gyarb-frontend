@@ -28,6 +28,7 @@ public class Button extends Component {
     private GlyphLayout layout;
     private boolean hover = false;
     private Action action;
+    private boolean active = true;
 
     public Button(float posX, float posY, float width, float height, String text, AbstractScene parent, Pixturation pixturation) {
         super(posX, posY, parent);
@@ -47,7 +48,7 @@ public class Button extends Component {
         Vector2 mousePos = getMousePos();
         if (mousePos.x > 0 && mousePos.x < getWidth() && mousePos.y > 0 && mousePos.y < getHeight()) {
             hover = true;
-            if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+            if (Gdx.input.isButtonPressed(Input.Buttons.LEFT) && active) {
                 doAction();
             }
         } else {
@@ -70,13 +71,21 @@ public class Button extends Component {
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         shape.begin();
         shape.set(ShapeRenderer.ShapeType.Filled);
-        if (hover) {
+        if (hover && active) {
             shape.setColor(new Color(1, 1, 1, 0.25f));
+            shape.rect(getX(), getY(), getWidth(), getHeight());
+        }
+        if (!active) {
+            shape.setColor(new Color(0.75f, 0.75f, 0.75f, 0.25f));
             shape.rect(getX(), getY(), getWidth(), getHeight());
         }
 
         shape.end();
-        DrawUtils.drawBoundingRect(getX(), getY(), width, height, 5, shape, Color.WHITE);
+        if (active) {
+            DrawUtils.drawBoundingRect(getX(), getY(), width, height, 5, shape, Color.WHITE);
+        } else {
+            DrawUtils.drawBoundingRect(getX(), getY(), width, height, 5, shape, new Color(0.75f, 0.75f, 0.75f, 1));
+        }
         Gdx.gl.glDisable(GL20.GL_BLEND);
 
         if (font != null) {
@@ -99,6 +108,10 @@ public class Button extends Component {
 
     public void setAction(Action action) {
         this.action = action;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public interface Action {

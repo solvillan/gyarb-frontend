@@ -12,6 +12,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import se.doverfelt.pixturation.Pixturation;
 import se.doverfelt.pixturation.scenes.components.ColorGrid;
+import se.doverfelt.pixturation.scenes.game.ScoreScene;
 import se.doverfelt.pixturation.utils.CompressionUtils;
 import se.doverfelt.pixturation.utils.HttpUtils;
 
@@ -31,6 +32,8 @@ public class Game {
     private Array<Player> players;
     private String word;
     private boolean hasMove;
+    private int score = 0;
+    private int lastScore = 0;
 
     private Game(long id, State state) {
         this.id = id;
@@ -69,6 +72,7 @@ public class Game {
     }
 
     public void submitGuess(String guess, float time) {
+        final Game game = this;
         HashMap<String, String> data = new HashMap<String, String>();
         JsonObject wrapper = new JsonObject();
         wrapper.add("guess", guess);
@@ -79,7 +83,14 @@ public class Game {
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
                 String response = httpResponse.getResultAsString();
-                Gdx.app.log(httpResponse.getStatus().toString() + ":", response);
+                Gdx.app.log("submitGuess", httpResponse.getStatus().getStatusCode() + " - " + response);
+                JsonValue base = Json.parse(response);
+                if (base.isObject()) {
+                    game.score = base.asObject().getInt("total_score", game.score);
+                    game.lastScore = base.asObject().getInt("guess_score", 0);
+                    ((ScoreScene)Pixturation.getScreen("guess_score")).setCorrect(base.asObject().getBoolean("correct", false));
+                    Pixturation.shouldSetScreen("guess_score");
+                }
             }
 
             @Override
@@ -115,7 +126,7 @@ public class Game {
                 throw new HttpUtils.MalformedResponseException();
             }
             final Game out = new Game(game.getInt("id", Integer.MIN_VALUE), State.DRAW);
-            out.currentPlayer = Player.createPlayer(game.get("current_player").asObject().getLong("id", -1));
+            out.currentPlayer = Player.createPlayer(game.get("current_player").asObject().getInt("id", -1));
             out.players.add(out.currentPlayer);
             return out;
         } else if (response.getStatus() == HttpStatus.SC_FORBIDDEN) {
@@ -128,8 +139,19 @@ public class Game {
     public static Game createGame(JsonObject object) {
         Game game = new Game(object.getLong("id", -1), stateFromNum(object.getInt("status", -1)));
         game.word = object.getString("current_word", "NO_WORD");
-        game.currentPlayer = Player.createPlayer(object.getLong("current_player", -1));
+        game.currentPlayer = Player.createPlayer(object.getInt("current_player", -1));
         game.players.add(game.currentPlayer);
+        if (object.get("players") != null) {
+            JsonArray players = object.get("players").asArray();
+            for (JsonValue base : players) {
+                if (base.isObject()) {
+                    game.addPlayer(Player.createPlayer(base.asObject()));
+                    if (base.asObject().getInt("id", -1) == Pixturation.getCurrentPlayer().getId() && base.asObject().get("pivot").isObject()) {
+                        game.score = base.asObject().get("pivot").asObject().getInt("score", 0);
+                    }
+                }
+            }
+        }
         return game;
     }
 
@@ -175,7 +197,11 @@ public class Game {
                     JsonObject data = base.asObject().get("game").asObject();
                     word = data.getString("current_word", "NO_WORD");
                     state = Game.stateFromNum(data.getInt("status", -1));
-                    currentPlayer = Player.createPlayer(data.get("current_player").asObject());
+                    if (data.get("current_player").isObject()) {
+                        currentPlayer = Player.createPlayer(data.get("current_player").asObject());
+                    } else if (data.get("current_player").isNumber()){
+                        currentPlayer = Player.createPlayer(data.getInt("current_player", -1));
+                    }
                     if (data.get("current_picture").isObject()) {
                         JsonObject picture = data.get("current_picture").asObject();
                         try {
@@ -188,7 +214,7 @@ public class Game {
                         JsonArray players = data.get("players").asArray();
                         this.players.clear();
                         for (JsonValue value : players) {
-                            this.players.add(Player.createPlayer(value.asObject().getLong("id", -1)));
+                            this.players.add(Player.createPlayer(value.asObject().getInt("id", -1)));
                         }
                     }
                 }
@@ -240,6 +266,14 @@ public class Game {
 
     public Color[][] getPicture() {
         return picture;
+    }
+
+    public int getScore() {
+        return lastScore;
+    }
+
+    public int getTotalScore() {
+        return score;
     }
 
     public enum State {

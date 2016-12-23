@@ -46,7 +46,7 @@ public class DrawGameScene extends AbstractScene {
         back.setAction(new Button.Action() {
             @Override
             public void onClick() {
-                pixturation.shouldSetScreen("menu");
+                Pixturation.shouldSetScreen("menu");
             }
         });
         submit = new Button(back.getX() - 2*(space/3f) - 10, 10, 2*(space/3f), 40, "Submit", this, pixturation);
@@ -55,7 +55,7 @@ public class DrawGameScene extends AbstractScene {
             public void onClick() {
                 if (pixturation.getCurrentGame() != null) {
                     pixturation.getCurrentGame().submitPicture(grid);
-                    pixturation.shouldSetScreen("menu");
+                    Pixturation.shouldSetScreen("menu");
                 }
             }
         });

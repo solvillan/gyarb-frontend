@@ -60,7 +60,7 @@ public class LoginHandler implements Net.HttpResponseListener {
                     JsonValue data = Json.parse(response);
                     if (data.isObject()) {
                         pixturation.setCurrentPlayer(new Player(data.asObject().getString("name", "NO_NAME"), data.asObject().getString("email", "NO_EMAIL"), data.asObject().getInt("id", -1)));
-                        pixturation.shouldSetScreen("menu");
+                        Pixturation.shouldSetScreen("menu");
                     }
                 }
             }

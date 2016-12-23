@@ -22,10 +22,7 @@ import com.github.czyzby.lml.util.LmlApplicationListener;
 import se.doverfelt.pixturation.net.models.Game;
 import se.doverfelt.pixturation.net.models.Player;
 import se.doverfelt.pixturation.scenes.*;
-import se.doverfelt.pixturation.scenes.game.ContinueGameScene;
-import se.doverfelt.pixturation.scenes.game.CreateGameScene;
-import se.doverfelt.pixturation.scenes.game.DrawGameScene;
-import se.doverfelt.pixturation.scenes.game.GuessGameScene;
+import se.doverfelt.pixturation.scenes.game.*;
 
 import java.io.Writer;
 import java.util.HashMap;
@@ -37,7 +34,7 @@ public class Pixturation extends LmlApplicationListener {
     private AssetManager assets;
     public FitViewport viewport;
     public Skin skin;
-    private String nextScreen;
+    private static String nextScreen;
     private static Player currentPlayer;
     private OrthographicCamera camera;
 
@@ -71,6 +68,7 @@ public class Pixturation extends LmlApplicationListener {
         addScreen("createGame", new CreateGameScene(new Stage(viewport)));
         addScreen("continueGame", new ContinueGameScene(new Stage(viewport)));
         addScreen("guessGame", new GuessGameScene(new Stage(viewport)));
+        addScreen("guess_score", new ScoreScene(new Stage(viewport)));
 
         setScreen("loading");
 	}
@@ -201,7 +199,7 @@ public class Pixturation extends LmlApplicationListener {
         Gdx.input.setInputProcessor(currentScreen.getStage());
     }
 
-    public void shouldSetScreen(String screen) {
+    public static void shouldSetScreen(String screen) {
         nextScreen = screen;
     }
 

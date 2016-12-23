@@ -40,7 +40,7 @@ public class MenuScene extends AbstractScene {
         super.show();
         batch = new SpriteBatch();
         font = pixturation.getFont(48);
-        layout = new GlyphLayout(font, pixturation.getCurrentPlayer().getName());
+        layout = new GlyphLayout(font, Pixturation.getCurrentPlayer().getName());
         if (pixturation.getAssets().isLoaded("logo.png")) {
             img = pixturation.getAssets().get("logo.png");
         }
@@ -53,12 +53,12 @@ public class MenuScene extends AbstractScene {
 
     @LmlAction("goToCreateGame")
     public void createGame(Actor actor) {
-        pixturation.shouldSetScreen("createGame");
+        Pixturation.shouldSetScreen("createGame");
     }
 
     @LmlAction("showProfile")
     public void showProfile(Button button) {
-        pixturation.shouldSetScreen("profile");
+        Pixturation.shouldSetScreen("profile");
     }
 
     @LmlAction("quit")
@@ -68,7 +68,7 @@ public class MenuScene extends AbstractScene {
 
     @LmlAction("continueGame")
     public void continueGame(Actor actor) {
-        pixturation.shouldSetScreen("continueGame");
+        Pixturation.shouldSetScreen("continueGame");
     }
 
     @Override

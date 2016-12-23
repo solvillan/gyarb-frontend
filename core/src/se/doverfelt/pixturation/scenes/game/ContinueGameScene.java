@@ -79,9 +79,9 @@ public class ContinueGameScene extends AbstractScene {
         if (!goBtn.isDisabled()) {
             pixturation.setCurrentGame(gamelist.getSelected());
             if (pixturation.getCurrentGame().getState() == Game.State.DRAW) {
-                pixturation.shouldSetScreen("drawGame");
+                Pixturation.shouldSetScreen("drawGame");
             } else {
-                pixturation.shouldSetScreen("guessGame");
+                Pixturation.shouldSetScreen("guessGame");
             }
         }
     }
@@ -98,6 +98,6 @@ public class ContinueGameScene extends AbstractScene {
 
     @LmlAction("back")
     public void back(Actor actor) {
-        pixturation.shouldSetScreen("menu");
+        Pixturation.shouldSetScreen("menu");
     }
 }

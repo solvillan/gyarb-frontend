@@ -7,6 +7,8 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import se.doverfelt.pixturation.utils.HttpUtils;
 
+import java.util.HashMap;
+
 /**
  * Created by Rickard on 2016-11-22.
  */
@@ -15,6 +17,7 @@ public class Player {
     private final String name;
     private final String email;
     private final int id;
+    private static HashMap<Integer, Player> players = new HashMap<Integer, Player>();
 
     public Player(String name, String email, int id) {
         this.name = name;
@@ -48,25 +51,37 @@ public class Player {
         return id;
     }
 
-    public static Player createPlayer(long id) {
-        HttpUtils.SyncHTTPResponse response = HttpUtils.getSync("user/" + id + "/info");
-        Gdx.app.log("Player.createPlayer", response.getBody());
-        JsonValue base = Json.parse(response.getBody());
-        String name, email;
-        int pid;
-        if (base.isObject()) {
-            name = base.asObject().getString("name", "NO_NAME");
-            email = base.asObject().getString("email", "NO_NAME");
-            pid = base.asObject().getInt("id", -1);
-            Gdx.app.log("Player.createPlayer", name + " : " + email + " : " + pid);
+    public static Player createPlayer(int id) {
+        if (players.containsKey(id)) {
+            return players.get(id);
         } else {
-            return null;
+            HttpUtils.SyncHTTPResponse response = HttpUtils.getSync("user/" + id + "/info");
+            Gdx.app.log("Player.createPlayer", response.getBody());
+            JsonValue base = Json.parse(response.getBody());
+            String name, email;
+            int pid;
+            if (base.isObject()) {
+                name = base.asObject().getString("name", "NO_NAME");
+                email = base.asObject().getString("email", "NO_NAME");
+                pid = base.asObject().getInt("id", -1);
+                Gdx.app.log("Player.createPlayer", name + " : " + email + " : " + pid);
+            } else {
+                return null;
+            }
+            Player player = new Player(name, email, pid);
+            players.put(pid, player);
+            return player;
         }
-        return new Player(name, email, pid);
     }
 
     public static Player createPlayer(JsonObject object) {
-        return new Player(object.getString("name", "NO_NAME"), object.getString("email", "NO_EMAIL"), object.getInt("id", -1));
+        if (players.containsKey(object.getInt("id", -1))) {
+            return players.get(object.getInt("id", -1));
+        } else {
+            Player player = new Player(object.getString("name", "NO_NAME"), object.getString("email", "NO_EMAIL"), object.getInt("id", -1));
+            players.put(player.getId(), player);
+            return player;
+        }
     }
 
     public Array<Game> getGames() {
