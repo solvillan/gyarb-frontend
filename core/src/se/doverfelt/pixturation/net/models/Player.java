@@ -19,7 +19,7 @@ public class Player {
     private final int id;
     private static HashMap<Integer, Player> players = new HashMap<Integer, Player>();
 
-    public Player(String name, String email, int id) {
+    private Player(String name, String email, int id) {
         this.name = name;
         this.email = email;
         this.id = id;
